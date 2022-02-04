@@ -23,7 +23,7 @@ var allEnchants = [
     "soul_speed",
     "respiration",
     "aqua_affinity",
-    "binding_curse"
+    "binding_curse",
 ]
 
 function generate(){
@@ -32,10 +32,12 @@ function generate(){
     var name = document.getElementsByClassName("name-field")[0].value
     var id = document.getElementsByClassName("id-field")[0].value
     var dungeonItem = document.getElementsByClassName("dungeon-item-field")[0].checked
+    var stars = document.getElementsByClassName("stars")[0].value
     var recombobulated = document.getElementsByClassName("recom-field")[0].checked
     var rarity = document.getElementsByClassName("rarity-field")[0].value
     var rarityColor = document.getElementsByClassName("color-field")[0].value
     var type = document.getElementsByClassName("type-field")[0].value
+    var description = document.getElementsByClassName("description")[0].value
 
     var damage = document.getElementsByClassName("damage-value")[0].value
     var strength = document.getElementsByClassName("strength-value")[0].value
@@ -73,6 +75,7 @@ function generate(){
     var enchantments = document.getElementsByClassName("enchantments")[0].value
     var ultimate = document.getElementsByClassName("ult-enchantment")[0].value
     var actualEnchantments = document.getElementsByClassName("actual-enchant")
+    var glintonly = document.getElementsByClassName("glint-only")[0].checked
     
     var damageOutput = getOutputForAttribute("Damage", damage)
     var strengthOutput = getOutputForAttribute("Strength", strength)
@@ -102,7 +105,11 @@ function generate(){
 
     var enchantmentOutput = generateEnchants(enchantments, ultimate)
 
-    var actualEnchantOutput = generateActualEnchants(actualEnchantments)
+    var actualEnchantOutput = generateActualEnchants(actualEnchantments, glintonly)
+
+    var descriptionOutput = generateDescription(description)
+
+    var starsOutput = generateStars(stars)
 
     command += id
     command += "{"
@@ -115,7 +122,7 @@ function generate(){
 
     command += "],"
 
-    command += "display:{Name:'{\"text\":\"" + name + "\",\"color\":\"" + rarityColor + "\",\"italic\":false}',"
+    command += "display:{Name:'[{\"text\":\"" + name + " \",\"color\":\"" + rarityColor + "\",\"italic\":false}," + starsOutput + "]',"
 
     command += "Lore:['["
     command += damageOutput + "]','["
@@ -135,6 +142,8 @@ function generate(){
     command += ability1Output + (ability1Output != "" ? loreSpace + "]','[" : "")
     command += ability2Output + (ability2Output != "" ? loreSpace + "]','[" : "")
     command += ability3Output + (ability3Output != "" ? loreSpace + "]','[" : "") + "]','["
+
+    command += descriptionOutput + "]','["
 
     command += rarityOutput
 
@@ -206,11 +215,37 @@ function generateEnchants(str, ultimate){
     return output
 }
 
-function generateActualEnchants(enchants){
+function generateActualEnchants(enchants, glint_only){
     var output = ""
+    if (glint_only){
+        return "{}"
+    }
     for (var i = 0; i < enchants.length; i++){
         if (enchants[i].value != ""){
             output += "{id:\"" + allEnchants[i] + "\",lvl:" + enchants[i].value +"s},"
+        }
+    }
+    return output
+}
+
+function generateStars(stars){
+    var output = ""
+    var output2 = ""
+    for (var i = 0; i < stars; i++){
+        output2 += "✪"
+    }
+    output = "{\"text\":\"" + output2 + "\",\"color\":\"gold\",\"italic\":false}"
+    return output
+}
+
+function generateDescription(str){
+    var output = ""
+    var splitStr = str.split('\n')
+    for (var i = 0; i < splitStr.length; i++){
+        if (i != splitStr.length - 1){
+            output += "{\"text\":\"" + splitStr[i] + "\",\"color\":\"gray\",\"italic\":false,\"bold\":false}]','["
+        } else {
+            output += "{\"text\":\"" + splitStr[i] + "\",\"color\":\"gray\",\"italic\":false,\"bold\":false}"
         }
     }
     return output
