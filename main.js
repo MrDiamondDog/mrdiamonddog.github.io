@@ -88,7 +88,7 @@ function generate(){
 
     rarity = fixQuotes(rarity)
     if (!dungeonItem && !recombobulated){
-        command += "{\"text\":\"" + rarity.toUpperCase() + " " + type.toUpperCase() + "\",\"italic\":false,\"obfuscated\":false,\"color\":\"" + rarityColor +"\",\"bold\":true}"
+        rarityOutput = "{\"text\":\"" + rarity.toUpperCase() + " " + type.toUpperCase() + "\",\"italic\":false,\"obfuscated\":false,\"color\":\"" + rarityColor +"\",\"bold\":true}"
     }
     else if (dungeonItem && recombobulated){
         rarityOutput = "{\"text\":\"e\",\"color\":\"" + rarityColor +"\",\"obfuscated\":true,\"bold\":true,\"italic\":false},{\"text\":\" \",\"obfuscated\":false},{\"text\":\"" + rarity.toUpperCase() + " DUNGEON " + type.toUpperCase() + "\",\"color\":\"" + rarityColor + "\",\"italic\":false,\"obfuscated\":false,\"bold\":true},{\"text\":\" \",\"obfuscated\":false},{\"text\":\"e\",\"color\":\"" + rarityColor + "\",\"obfuscated\":true,\"bold\":true,\"italic\":false}"
