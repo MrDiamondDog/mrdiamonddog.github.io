@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>An Attempt At A Hypixel Skyblock Item Generator</title>
+        <script src="main.js"></script>
+        <script src="jquery-3.6.0.js"></script>
+        <link rel="stylesheet" href="main.css">
+        <link rel="preload" href="Minecraft.woff2" as="font" type="font/woff2" crossorigin>
+	</head>
+	<body>
+		<h1 style="font-family: minecraft;">An Attempt At A Hypixel Skyblock Item Generator</h1>
+        <div>
+            <p style="display: inline-block">Name:</p>
+            <input type="text" style="display: inline-block" placeholder="Aspect of the Aether" class="name-field">
+        </div>
+        <div>
+            <p style="display: inline-block">Item Id:</p>
+            <input type="text" placeholder="minecraft:diamond_sword" class="id-field">
+        </div>
+        <div>
+            <p style="display: inline-block">Item Type:</p>
+            <select name="Item Type" class="type-field">
+                <option value="sword">Sword</option>
+                <option value="bow">Bow</option>
+                <option value="helmet">Helmet</option>
+                <option value="chestplate">Chestplate</option>
+                <option value="leggings">Leggings</option>
+                <option value="boots">Boots</option>
+                <option value="accessory">Accessory</option>
+                <option value="fishing_rod">Fishing Rod</option>
+                <option value="pickaxe">Pickaxe</option>
+                <option value="axe">Axe</option>
+                <option value="shovel">Shovel</option>
+                <option value="hoe">Hoe</option>
+                <option value="other">Other</option>
+            </select>
+        </div>
+        <div>
+            <p style="display: inline-block">Rarity:</p>
+            <input type="text" placeholder="Rare" class="rarity-field">
+        </div>
+        <div>
+            <p style="display: inline-block">Rarity Color:</p>
+            <select name="Color" class="color-field" on>
+                <option value="dark_red">Dark Red</option>
+                <option value="red">Red</option>
+                <option value="gold">Gold</option>
+                <option value="yellow">Yellow</option>
+                <option value="dark_green">Dark Green</option>
+                <option value="green">Green</option>
+                <option value="aqua">Aqua</option>
+                <option value="dark_aqua">Dark Aqua</option>
+                <option value="dark_blue">Dark Blue</option>
+                <option value="blue">Blue</option>
+                <option value="light_purple">Light Purple</option>
+                <option value="dark_purple">Dark Purple</option>
+                <option value="white">White</option>
+                <option value="gray">Gray</option>
+                <option value="dark_gray">Dark Gray</option>
+                <option value="black">Black</option>
+            </select>
+        </div>
+        <div>
+            <p style="display: inline-block">Dungeon Item:</p>
+            <input type="checkbox" style="display: inline-block" class="dungeon-item-field">
+        </div>
+        <div>
+            <p style="display: inline-block">Recombobulated:</p>
+            <input type="checkbox" style="display: inline-block" class="recom-field">
+        </div>
+        <div>
+            <p style="display: inline-block">Damage:</p>
+            <input type="text" style="display: inline-block" class="damage-value" placeholder="Amount">
+        </div>
+        <div>
+            <p style="display: inline-block">Strength:</p>
+            <input type="text" style="display: inline-block" class="strength-value" placeholder="Amount">
+        </div>
+        <div>
+            <p style="display: inline-block">Custom Attribute 1:</p>
+            <input type="text" style="display: inline-block" class="custom-1-name" placeholder="Name">
+            <input type="text" style="display: inline-block" class="custom-1-val" placeholder="Value">
+        </div>
+        <div>
+            <p style="display: inline-block">Custom Attribute 2:</p>
+            <input type="text" style="display: inline-block" class="custom-2-name" placeholder="Name">
+            <input type="text" style="display: inline-block" class="custom-2-val" placeholder="Value">
+        </div>
+        <div>
+            <p style="display: inline-block">Custom Attribute 3:</p>
+            <input type="text" style="display: inline-block" class="custom-3-name" placeholder="Name">
+            <input type="text" style="display: inline-block" class="custom-3-val" placeholder="Value">
+        </div>
+        <div>
+            <p style="display: inline-block">Custom Attribute 4:</p>
+            <input type="text" style="display: inline-block" class="custom-4-name" placeholder="Name">
+            <input type="text" style="display: inline-block" class="custom-4-val" placeholder="Value">
+        </div>
+
+        <div>
+            <p>Ability 1:</p>
+            <input type="text" style="display: inline-block" class="ability-1-name" placeholder="Name">
+            <select name="TypeAbility" class="ability-1-type">
+                <option value="passive">Passive</option>
+                <option value="full set bonus">Full Set Bonus</option>
+                <option value="right click">Right Click</option>
+                <option value="sneak">Sneak</option>
+            </select>
+            <textarea style="display: inline-block" class="ability-1-desc" placeholder="Description"></textarea>
+            <input type="number" style="display: inline-block" class="ability-1-mana" placeholder="Mana Cost">
+            <input type="number" style="display: inline-block" class="ability-1-cool" placeholder="Cooldown (seconds)">
+        </div>
+        <div>
+            <p>Ability 2:</p>
+            <input type="text" style="display: inline-block" class="ability-2-name" placeholder="Name">
+            <select name="TypeAbility" class="ability-2-type">
+                <option value="passive">Passive</option>
+                <option value="full set bonus">Full Set Bonus</option>
+                <option value="right click">Right Click</option>
+                <option value="sneak">Sneak</option>
+            </select>
+            <textarea style="display: inline-block" class="ability-2-desc" placeholder="Description"></textarea>
+            <input type="number" style="display: inline-block" class="ability-2-mana" placeholder="Mana Cost">
+            <input type="number" style="display: inline-block" class="ability-2-cool" placeholder="Cooldown (seconds)">
+        </div>
+        <div>
+            <p>Ability 3:</p>
+            <input type="text" style="display: inline-block" class="ability-3-name" placeholder="Name">
+            <select name="TypeAbility" class="ability-3-type">
+                <option value="passive">Passive</option>
+                <option value="full set bonus">Full Set Bonus</option>
+                <option value="right click">Right Click</option>
+                <option value="sneak">Sneak</option>
+            </select>
+            <textarea style="display: inline-block" class="ability-3-desc" placeholder="Description"></textarea>
+            <input type="number" style="display: inline-block" class="ability-3-mana" placeholder="Mana Cost">
+            <input type="number" style="display: inline-block" class="ability-3-cool" placeholder="Cooldown (seconds)">
+        </div>
+
+        <div>
+            <p style="display: inline-block;">Enchantments:</p>
+            <textarea style="display: inline-block" class="enchantments" placeholder="Sharpness V, Thunderlord V, Dragon Hunter V..."></textarea>
+        </div>
+
+        <div>
+            <p style="display: inline-block;">Ultimate Enchantment:</p>
+            <textarea style="display: inline-block" class="ult-enchantment" placeholder="Ultimate Wise V"></textarea>
+        </div>
+        <br>
+        <div>
+            <p>Actual Enchants:</p>
+            <p style="display: inline-block">Sharpness:</p>
+            <input type="number" style="display: inline-block" class="actual-enchant" placeholder="Lvl">
+            <br>
+            <p style="display: inline-block">Smite:</p>
+            <input type="number" style="display: inline-block" class="actual-enchant" placeholder="Lvl">
+            <br>
+            <p style="display: inline-block">Bane of Arthropods:</p>
+            <input type="number" style="display: inline-block" class="actual-enchant" placeholder="Lvl">
+            <br>
+            <p style="display: inline-block">Knockback:</p>
+            <input type="number" style="display: inline-block" class="actual-enchant" placeholder="Lvl">
+            <br>
+            <p style="display: inline-block">Fire Aspect:</p>
+            <input type="number" style="display: inline-block" class="actual-enchant" placeholder="Lvl">
+            <br>
+            <p style="display: inline-block">Looting:</p>
+            <input type="number" style="display: inline-block" class="actual-enchant" placeholder="Lvl">
+            <br>
+            <p style="display: inline-block">Sweeping:</p>
+            <input type="number" style="display: inline-block" class="actual-enchant" placeholder="Lvl">
+            <br>
+            <p style="display: inline-block">Curse of Vanishing:</p>
+            <input type="number" style="display: inline-block" class="actual-enchant" placeholder="Lvl">
+            <br>
+            <p style="display: inline-block">Effciency:</p>
+            <input type="number" style="display: inline-block" class="actual-enchant" placeholder="Lvl">
+            <br>
+            <p style="display: inline-block">Silk Touch:</p>
+            <input type="number" style="display: inline-block" class="actual-enchant" placeholder="Lvl">
+            <br>
+            <p style="display: inline-block">Fortune:</p>
+            <input type="number" style="display: inline-block" class="actual-enchant" placeholder="Lvl">
+            <br>
+            <p style="display: inline-block">Protection:</p>
+            <input type="number" style="display: inline-block" class="actual-enchant" placeholder="Lvl">
+            <br>
+            <p style="display: inline-block">Fire Protection:</p>
+            <input type="number" style="display: inline-block" class="actual-enchant" placeholder="Lvl">
+            <br>
+            <p style="display: inline-block">Feather Falling:</p>
+            <input type="number" style="display: inline-block" class="actual-enchant" placeholder="Lvl">
+            <br>
+            <p style="display: inline-block">Blast Protection:</p>
+            <input type="number" style="display: inline-block" class="actual-enchant" placeholder="Lvl">
+            <br>
+            <p style="display: inline-block">Projectile Protection:</p>
+            <input type="number" style="display: inline-block" class="actual-enchant" placeholder="Lvl">
+            <br>
+            <p style="display: inline-block">Thorns:</p>
+            <input type="number" style="display: inline-block" class="actual-enchant" placeholder="Lvl">
+            <br>
+            <p style="display: inline-block">Depth Strider:</p>
+            <input type="number" style="display: inline-block" class="actual-enchant" placeholder="Lvl">
+            <br>
+            <p style="display: inline-block">Frost Walker:</p>
+            <input type="number" style="display: inline-block" class="actual-enchant" placeholder="Lvl">
+            <br>
+            <p style="display: inline-block">Soul Speed:</p>
+            <input type="number" style="display: inline-block" class="actual-enchant" placeholder="Lvl">
+            <br>
+            <p style="display: inline-block">Respiration:</p>
+            <input type="number" style="display: inline-block" class="actual-enchant" placeholder="Lvl">
+            <br>
+            <p style="display: inline-block">Aqua Affinity:</p>
+            <input type="number" style="display: inline-block" class="actual-enchant" placeholder="Lvl">
+            <br>
+            <p style="display: inline-block">Curse of Binding:</p>
+            <input type="number" style="display: inline-block" class="actual-enchant" placeholder="Lvl">
+            <br>
+        </div>
+
+    
+        <br>
+        <button onclick="generate()">Generate Command</button>
+        <textarea style="display: block; width: 700px; height: 300px" class="result-field" placeholder="Waiting for user to press generate..." disabled></textarea>
+	</body>
+</html>
