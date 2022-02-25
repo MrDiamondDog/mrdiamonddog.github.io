@@ -250,3 +250,30 @@ function generateDescription(str){
     }
     return output
 }
+
+
+function generateCrafting(){
+    var name = document.getElementsByClassName("cc-name-field")[0].value
+    var id = document.getElementsByClassName("cc-id-field")[0].value
+
+    var rname = document.getElementsByClassName("cc-name-field")[8].value
+    var r = document.getElementsByClassName("cc-field")[8].value
+
+    var output = "/execute at @a run execute if block ~ ~-1 ~ "
+    output += id
+    
+    for (i = 0; i <= 8; i++){
+        output += generateItems(i, document.getElementsByClassName("cc-field")[i].value, ccname0 = document.getElementsByClassName("cc-name-field")[i].value, 1)
+    }
+
+    $('.result-field').text(output)
+}
+
+function generateItems(slot, id, name, count){
+    var output = "{Slot:" + slot + "b,id:\"" + id + "\",Count:" + count + "b"
+    if (name != ""){
+        output += ",tag:{display:{Name:'{\"text\":\"e\"}'}}"
+    } 
+    output += "},"
+    return output
+}
