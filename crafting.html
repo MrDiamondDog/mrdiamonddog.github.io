@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<meta charset="utf-8"> 
-		<title>An Attempt At A Hypixel Skyblock Item Generator</title>
+		<title>Custom Crafting Generator Generator</title>
         <script src="main.js"></script>
         <script src="jquery-3.6.0.js"></script>
         <link rel="stylesheet" href="main.css">
@@ -20,7 +20,7 @@
         <br>
         <div>
             <p style="display: inline-block">Name of custom crafting table:</p>
-            <input type="text" style="display: inline-block" placeholder="Custom Crafting Table" class="cc-name-field">
+            <input type="text" style="display: inline-block" placeholder="Custom Crafting Table" class="cc-name-dropper-field">
             <p class="desc">What the container should be named to work.</p>
         </div>
 
@@ -33,52 +33,53 @@
         <div>
             <p style="display: inline-block">Item in slot 1 of table:</p>
             <input type="text" style="display: inline-block" placeholder="ID" class="cc-field">
-            <input type="text" style="display: inline-block" placeholder="Name (JSON Component)" class="cc-name-field">
+            <input type="text" style="display: inline-block" placeholder="NBT" class="cc-name-field">
         </div>
         <div>
             <p style="display: inline-block">Item in slot 2 of table:</p>
             <input type="text" style="display: inline-block" placeholder="ID" class="cc-field">
-            <input type="text" style="display: inline-block" placeholder="Name (JSON Component)" class="cc-name-field">
+            <input type="text" style="display: inline-block" placeholder="NBT" class="cc-name-field">
         </div>
         <div>
             <p style="display: inline-block">Item in slot 3 of table:</p>
             <input type="text" style="display: inline-block" placeholder="ID" class="cc-field">
-            <input type="text" style="display: inline-block" placeholder="Name (JSON Component)" class="cc-name-field">
+            <input type="text" style="display: inline-block" placeholder="NBT" class="cc-name-field">
         </div>
         <div>
             <p style="display: inline-block">Item in slot 4 of table:</p>
             <input type="text" style="display: inline-block" placeholder="ID" class="cc-field">
-            <input type="text" style="display: inline-block" placeholder="Name (JSON Component)" class="cc-name-field">
+            <input type="text" style="display: inline-block" placeholder="NBT" class="cc-name-field">
         </div>
         <div>
             <p style="display: inline-block">Item in slot 5 of table:</p>
             <input type="text" style="display: inline-block" placeholder="ID" class="cc-field">
-            <input type="text" style="display: inline-block" placeholder="Name (JSON Component)" class="cc-name-field">
+            <input type="text" style="display: inline-block" placeholder="NBT" class="cc-name-field">
         </div>
         <div>
             <p style="display: inline-block">Item in slot 6 of table:</p>
             <input type="text" style="display: inline-block" placeholder="ID" class="cc-field">
-            <input type="text" style="display: inline-block" placeholder="Name (JSON Component)" class="cc-name-field">
+            <input type="text" style="display: inline-block" placeholder="NBT" class="cc-name-field">
         </div>
         <div>
             <p style="display: inline-block">Item in slot 7 of table:</p>
             <input type="text" style="display: inline-block" placeholder="ID" class="cc-field">
-            <input type="text" style="display: inline-block" placeholder="Name (JSON Component)" class="cc-name-field">
+            <input type="text" style="display: inline-block" placeholder="NBT" class="cc-name-field">
         </div>
         <div>
             <p style="display: inline-block">Item in slot 8 of table:</p>
             <input type="text" style="display: inline-block" placeholder="ID" class="cc-field">
-            <input type="text" style="display: inline-block" placeholder="Name (JSON Component)" class="cc-name-field">
+            <input type="text" style="display: inline-block" placeholder="NBT" class="cc-name-field">
         </div>
         <div>
             <p style="display: inline-block">Item in slot 9 of table:</p>
             <input type="text" style="display: inline-block" placeholder="ID" class="cc-field">
-            <input type="text" style="display: inline-block" placeholder="Name (JSON Component)" class="cc-name-field">
+            <input type="text" style="display: inline-block" placeholder="NBT" class="cc-name-field">
         </div>
         <div>
             <p style="display: inline-block">Result Item:</p>
             <input type="text" style="display: inline-block" placeholder="ID" class="cc-r-field">
-            <input type="text" style="display: inline-block" placeholder="Name (JSON Component)" class="cc-r-name-field">
+            <input type="text" style="display: inline-block" placeholder="Raw NBT" class="cc-r-nbt-field">
+            <input type="number" style="display: inline-block; width: 100px;" placeholder="Slot (1-9)" class="cc-r-slot-field">
         </div>
 
         <button onclick="generateCrafting()">Generate Command</button>
