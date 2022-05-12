@@ -17,6 +17,11 @@
         </div>
       </div>
       <div id="unity-warning"> </div>
+      <div id="unity-footer">
+        <div id="unity-webgl-logo"></div>
+        <div id="unity-fullscreen-button"></div>
+        <div id="unity-build-title">Slingshot Puzzles</div>
+      </div>
     </div>
     <script>
       var container = document.querySelector("#unity-container");
@@ -51,13 +56,13 @@
       }
 
       var buildUrl = "Build";
-      var loaderUrl = buildUrl + "/Cool math game BUILD web.loader.js";
+      var loaderUrl = buildUrl + "/Slingshot Puzzles.loader.js";
       var config = {
-        dataUrl: buildUrl + "/Cool math game BUILD web.data.unityweb",
-        frameworkUrl: buildUrl + "/Cool math game BUILD web.framework.js.unityweb",
-        codeUrl: buildUrl + "/Cool math game BUILD web.wasm.unityweb",
+        dataUrl: buildUrl + "/Slingshot Puzzles.data.unityweb",
+        frameworkUrl: buildUrl + "/Slingshot Puzzles.framework.js.unityweb",
+        codeUrl: buildUrl + "/Slingshot Puzzles.wasm.unityweb",
         streamingAssetsUrl: "StreamingAssets",
-        companyName: "Good luck finding who made the game. If you want to know, good luck getting through over 90 billion combinations, or decompiling the game.",
+        companyName: "MrDiamondDog",
         productName: "Slingshot Puzzles",
         productVersion: "1.0",
         showBanner: unityShowBanner,
@@ -68,7 +73,7 @@
       // Set this to false if you want to decouple this synchronization from
       // happening inside the engine, and you would instead like to size up
       // the canvas DOM size and WebGL render target sizes yourself.
-      config.matchWebGLToCanvasSize = false;
+      // config.matchWebGLToCanvasSize = false;
 
       if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
         container.className = "unity-mobile";
@@ -77,8 +82,8 @@
         config.devicePixelRatio = 1;
         unityShowBanner('WebGL builds are not supported on mobile devices.');
       } else {
-        canvas.style.width = "1200px";
-        canvas.style.height = "750px";
+        canvas.style.width = "960px";
+        canvas.style.height = "600px";
       }
       loadingBar.style.display = "block";
 
@@ -89,8 +94,11 @@
           progressBarFull.style.width = 100 * progress + "%";
         }).then((unityInstance) => {
           loadingBar.style.display = "none";
+          fullscreenButton.onclick = () => {
+            unityInstance.SetFullscreen(1);
+          };
         }).catch((message) => {
-          console.log(message);
+          alert(message);
         });
       };
       document.body.appendChild(script);
