@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en-us">
   <head>
@@ -10,17 +9,19 @@
   </head>
   <body>
     <div id="unity-container" class="unity-desktop">
-      <canvas id="unity-canvas" width=1200 height=750></canvas>
+      <canvas id="unity-canvas" width=960 height=600></canvas>
       <div id="unity-loading-bar">
         <div id="unity-logo"></div>
-        <h3 style="color:white">Best played in fullscreen! Press F11 or the fullscreen button on Chromebooks. If you can not press any button, make sure you are in fullscreen. If it still does not work, try adjusting your browser's zoom level.</h3>
-        <br>
-        <h3 style="color:white">Go here to report bugs: <a href="https://forms.gle/oszd9nmHZ8qy74Xy6">Google Forms</a></h3>
         <div id="unity-progress-bar-empty">
           <div id="unity-progress-bar-full"></div>
         </div>
       </div>
       <div id="unity-warning"> </div>
+      <div id="unity-footer">
+        <div id="unity-webgl-logo"></div>
+        <div id="unity-fullscreen-button"></div>
+        <div id="unity-build-title">Slingshot Puzzles</div>
+      </div>
     </div>
     <script>
       var container = document.querySelector("#unity-container");
@@ -61,7 +62,7 @@
         frameworkUrl: buildUrl + "/Slingshot Puzzles.framework.js.unityweb",
         codeUrl: buildUrl + "/Slingshot Puzzles.wasm.unityweb",
         streamingAssetsUrl: "StreamingAssets",
-        companyName: "Good job looking through the code. Not much else you can find here. Here is a secret. t1db Level 7",
+        companyName: "MrDiamondDog",
         productName: "Slingshot Puzzles",
         productVersion: "1.0",
         showBanner: unityShowBanner,
@@ -72,7 +73,7 @@
       // Set this to false if you want to decouple this synchronization from
       // happening inside the engine, and you would instead like to size up
       // the canvas DOM size and WebGL render target sizes yourself.
-      config.matchWebGLToCanvasSize = false;
+      // config.matchWebGLToCanvasSize = false;
 
       if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
         container.className = "unity-mobile";
@@ -81,8 +82,8 @@
         config.devicePixelRatio = 1;
         unityShowBanner('WebGL builds are not supported on mobile devices.');
       } else {
-        canvas.style.width = "1200px";
-        canvas.style.height = "750px";
+        canvas.style.width = "960px";
+        canvas.style.height = "600px";
       }
       loadingBar.style.display = "block";
 
@@ -97,7 +98,7 @@
             unityInstance.SetFullscreen(1);
           };
         }).catch((message) => {
-          alert("ExpressionException: 0x5389B\n0x46000 is an invalid expression. \n**IF YOU ARE NOT A DEVELOPER, PLEASE IGNORE THIS AND PRESS 'OKAY'**");
+          alert(message);
         });
       };
       document.body.appendChild(script);
