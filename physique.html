@@ -1,3 +1,18 @@
+<!--
+  Alright. Welcome back from Vail.
+  I'm sure you have been waiting to 
+  begin again. 
+
+  This code sucks. Revise it maybe?
+  Where you left off:
+  - making a way to edit a variable on a body
+  - You can use:
+  - for (variable in body)
+  - to get the variables in a body.
+  
+  I'm too tired to even try and explain, I hope you can remember.
+-->
+
 <!DOCTYPE html>
 <html>
   <head>
@@ -11,7 +26,7 @@
         background-color: rgba(69, 69, 69, 1);
         overflow-x: hidden;
       }
-      p, a, h1, h2, h3, h4, label, input, select, button {
+      p, a, h1, h2, h3, h4, label, input, select, button, div {
         color: white;
         font-family: consolas;
       }
@@ -81,6 +96,14 @@
       button:active{
         background-color: rgba(85, 85, 85, 1);
       }
+      .dropdown-button{
+        background-color: rgba(69, 69, 69, 1) !important;
+        text-align: left;
+        width:200px;
+        height:30px;
+        font-size: 20px;
+        outline: none;
+      }
       label{
         font-size: 20px;
       }
@@ -97,10 +120,13 @@
         margin: 0px;
         padding: 0px;
       }
+      .content{
+        display: none;
+        padding: 0 18px;
+      }
     </style>
   </head>
   <body>
-    <h1>Physique</h1>
     <script src="matter.js"></script>
   </body>
   <body id="bottom">
@@ -158,6 +184,25 @@
       <input type="number" name="y" placeholder="Y" id="y" class="show-buttons" disabled>
     </div>
     <br>
+    <div id="finder">
+      <h1 class="no-space">Body Editor</h1>
+      <h3 class="no-space">Get a body by id and edit the properties of it.</h3>
+      <h3 class="no-space">Click on an object to get information or enter it's id.</h3>
+      <h3 class="no-space">Enable 'Show IDs' in settings to get the id of a body.</h3>
+      <br>
+      <input type="number" name="id" placeholder="Id">
+      <br>
+      <button name="find">Find</button>
+      <br>
+      <button type="button" class="collapsible">Show Information</button>
+      <div class="content" id="info">
+        <p>Waiting...</p>
+      </div>
+      <br>
+      <input type="text" placeholder="Variable to edit -WIP-">
+      <input type="number" placeholder="Index (if needed) -WIP-">
+    </div>
+    <br>
     <div id="settings">
       <h1 class="no-space">Settings</h1>
       <button id="all">All</button>
@@ -197,5 +242,6 @@
       <label for="showMouse">Show Mouse Contraint (Requires Clear)</label>
     </div>
     <p>Made with <a href="https://github.com/liabru/matter-js" target="_blank">Matter.js</a></p>
+    <script src="collapsible.js"></script>
   </body>
 </html>

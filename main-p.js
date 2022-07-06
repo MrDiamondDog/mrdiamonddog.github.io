@@ -1,4 +1,7 @@
+var AllBodies = []
+
 window.addEventListener('load', function () {
+    // spawner
     var shapechooser = document.querySelector("#bottom select[name='shape']");
     var rectwidth = document.querySelector("#bottom input[name='width']");
     var rectheight = document.querySelector("#bottom input[name='height']");
@@ -34,6 +37,11 @@ window.addEventListener('load', function () {
     var pointerx = document.querySelector("#bottom #x");
     var pointery = document.querySelector("#bottom #y");
     var pointerenabled = document.querySelector("#bottom #pointer-check");
+
+    // body editor
+    var id = document.querySelector("#bottom input[name='id']");
+    var find = document.querySelector("#bottom button[name='find']");
+    var info = document.querySelector("#bottom #info");
 
     shapechooser.onchange = function() {
         if (shapechooser.value == 'rect'){
@@ -141,6 +149,9 @@ window.addEventListener('load', function () {
         }
 
         Composite.add(engine.world, shapes);
+        for (var i = 0; i < shapes.length; i++) {
+            AllBodies.push(shapes[i]);
+        }
         error.innerHTML = "";
     };
 
@@ -168,6 +179,9 @@ window.addEventListener('load', function () {
         }
 
         Composite.add(engine.world, shapes);
+        for (var i = 0; i < shapes.length; i++) {
+            AllBodies.push(shapes[i]);
+        }
     };
 
     clear.onclick = function() {
@@ -254,6 +268,71 @@ window.addEventListener('load', function () {
     pointery.onchange = function() {
         Body.setPosition(pointer, Vector.create(pointerx.value, pointery.value));
     }
+
+    find.onclick = function() {
+        info.innerHTML = "";
+        var body = GetBodyFromID(id.value);
+        if (body){
+            for (variable in body){
+                info.innerHTML += variable + ": " + body[variable];
+            }
+        } else {
+            info.innerHTML = "No body found with ID: " + id.value;
+        }
+    }
+
+    Events.on(mouseConstraint, "startdrag", function(event){
+        info.innerHTML = "";
+        for (variable in event.body) {
+            if (variable == "positionImpulse" || variable == "constraintImpulse" || variable == "positionPrev" || variable == "parent" || variable == "parts" || variable == "plugin" || variable == "render" || variable == "_original") continue;
+            
+            if (variable == 'vertices'){
+                info.innerHTML += variable + ": [";
+                for (var i = 0; i < event.body.vertices.length; i++) {
+                    info.innerHTML += "<p style='padding-left: 30px'>" + event.body.vertices[i].x + ", " + event.body.vertices[i].y + "</p>";
+                }
+                info.innerHTML += "]";
+                continue;
+            }
+            if (variable == 'position'){
+                info.innerHTML += "<p>Position: " + event.body.position.x + ", " + event.body.position.y + "</p>";
+                continue;
+            }
+            if (variable == 'velocity'){
+                info.innerHTML += "<p>Velocity: " + event.body.velocity.x + ", " + event.body.velocity.y + "</p>";
+                continue;
+            }
+            if (variable == 'force'){
+                info.innerHTML += "<p>Force: " + event.body.force.x + ", " + event.body.force.y + "</p>";
+                continue;
+            }
+            if (variable == 'collisionFilter'){
+                info.innerHTML += "<p>Collision Filter: [</p>";
+                info.innerHTML += "<p style='padding-left: 30px'>category: " + event.body.collisionFilter.category + "</p>";
+                info.innerHTML += "<p style='padding-left: 30px'>mask: " + event.body.collisionFilter.mask + "</p>";
+                info.innerHTML += "<p style='padding-left: 30px'>group: " + event.body.collisionFilter.group + "</p>";
+                info.innerHTML += "<p>]</p>";
+                continue;
+            }
+            if (variable == 'bounds'){
+                info.innerHTML += "<p>Bounds: [</p>";
+                info.innerHTML += "<p style='padding-left: 30px'>min: " + event.body.bounds.min.x + ", " + event.body.bounds.min.y + "</p>";
+                info.innerHTML += "<p style='padding-left: 30px'>max: " + event.body.bounds.max.x + ", " + event.body.bounds.max.y + "</p>";
+                info.innerHTML += "<p>]</p>";
+                continue;
+            }
+            if (variable == 'axes'){
+                info.innerHTML += "<p>Axes: [</p>";
+                for (var i = 0; i < event.body.axes.length; i++) {
+                    info.innerHTML += "<p style='padding-left: 30px'>" + event.body.axes[i].x + ", " + event.body.axes[i].y + "</p>";
+                }
+                info.innerHTML += "]</p>";
+                continue;
+            }
+
+            info.innerHTML += "<p>" + variable + ": " + event.body[variable] + "</p>";
+        }
+    });
 });
 
 function UpdateRenderSettings(wireframe, showDebug, showPositions, showBounds, showVel, showColl, showAxes, showAngle, showIds, showVert) {
@@ -273,6 +352,13 @@ function getRandomInt(min, max) {
     min = Math.ceil(min);
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min) + min); //The maximum is exclusive and the minimum is inclusive
+}
+
+function GetBodyFromID(id) {
+    for (var i = 0; i < AllBodies.length; i++) {
+        if (AllBodies[i].id == id) return AllBodies[i];
+    }
+    return null;
 }
 
 // module aliases
@@ -324,6 +410,10 @@ var ceiling = Bodies.rectangle(400, 0, 810, 10, { isStatic: true, render: {fillS
 
 // add all of the bodies to the world
 Composite.add(engine.world, [pointer, stack, ground, wallL, wallR, ceiling]);
+for (var i = 0; i < stack.bodies.length; i++) {
+    AllBodies.push(stack.bodies[i]);
+}
+AllBodies.push(ground, wallL, wallR, ceiling);
 
 // add mouse control
 var mouse = Mouse.create(render.canvas),
