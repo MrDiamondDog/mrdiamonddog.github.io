@@ -78,8 +78,6 @@ window.addEventListener('load', function () {
         }
     };
 
-    // dunno why but the commit didn't work, just making a 'change'
-
     submit.onclick = function() {
         var shapes = [];
 

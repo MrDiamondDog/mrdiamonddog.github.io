@@ -100,16 +100,19 @@
     </style>
   </head>
   <body>
+    <h1>Physique</h1>
     <script src="matter.js"></script>
   </body>
   <body id="bottom">
     <script src="main-p.js"></script>
-    <a href="chrome-extension://ecggoakdgceegllfnibenacbpfaeidff/popup.html" target="_blank">Popout</a>
     <br>
+    <p>Click and drag on an object to move it</p>
     <br>
     <button id="clear">Clear</button>
+    <br>
+    <br>
     <div id="spawner">
-      <h1>Spawner</h1>
+      <h1 class="no-space">Spawner</h1>
       <select name="shape" id="shape-choose">
         <option value="rect">Rectangle</option>
         <option value="circle">Circle</option>
@@ -119,6 +122,7 @@
       </select>
       <br>
       <select name="color" id="color-choose">
+        <option value="">Random Color</option>
         <option value="red">Red</option>
         <option value="green">Green</option>
         <option value="blue">Blue</option>
@@ -128,7 +132,6 @@
         <option value="white">White</option>
         <option value="gray">Gray</option>
         <option value="black">Black</option>
-        <option value="">Random</option>
       </select>
       <br>
       <input type="number" name="amount" id="amount" placeholder="Amount">
@@ -139,24 +142,24 @@
       <input type="number" name="sides" placeholder="Sides" id="sides" hidden>
       <br>
       <button id="spawn">Spawn</button>
-      <button id="random">Random</button>
+      <button id="random">Random Values</button>
       <br>
       <h2 id="error" class="red"></h2>
     </div>
     <br>
     <div id="pointer">
       <h1 class="no-space">Pointer</h1>
-      <h2 class="no-space">A pointer to show where an inputted coordinate is.</h2>
+      <h3 class="no-space">A pointer to show where an inputted coordinate is.</h3>
       <br>
       <input type="checkbox" name="pointer" id="pointer-check">
-      <label for="pointer-check">Enabled</label>
+      <label for="pointer-check" class="no-space">Enabled</label>
       <br>
       <input type="number" name="x" placeholder="X" id="x" class="show-buttons" disabled>
       <input type="number" name="y" placeholder="Y" id="y" class="show-buttons" disabled>
     </div>
     <br>
     <div id="settings">
-      <h1>Settings</h1>
+      <h1 class="no-space">Settings</h1>
       <button id="all">All</button>
       <button id="none">None</button>
       <br>
