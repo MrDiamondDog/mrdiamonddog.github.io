@@ -1,137 +1,26 @@
-<!--
-  Alright. Welcome back from Vail.
-  I'm sure you have been waiting to 
-  begin again. 
-
-  This code sucks. Revise it maybe?
-  Where you left off:
-  - making a way to edit a variable on a body
-  - You can use:
-  - for (variable in body)
-  - to get the variables in a body.
-  
-  I'm too tired to even try and explain, I hope you can remember.
--->
-
 <!DOCTYPE html>
 <html>
   <head>
-    <style>
-      html {
-        background: rgba(69, 69, 69, 1);
-        width: 800px;
-        height: 600px;
-      }
-      body{
-        background-color: rgba(69, 69, 69, 1);
-        overflow-x: hidden;
-      }
-      p, a, h1, h2, h3, h4, label, input, select, button, div {
-        color: white;
-        font-family: consolas;
-      }
-      select {
-        background-color: rgba(100, 100, 100, 1);
-        color: white;
-        width:200px;
-        height:30px;
-        border: none;
-        border-radius: 5px;
-        margin-bottom: 3px;
-        font-size: 20px;
-        outline: none;
-      }
-      input:not([type='checkbox']) {
-        background-color: rgba(100, 100, 100, 1);
-        color: white;
-        width:200px;
-        height:30px;
-        border: none;
-        border-radius: 5px;
-        font-size: 20px;
-        margin-bottom: 3px;
-        outline: none;
-      }
-      input[type='checkbox'] {
-        background-color: rgba(100, 100, 100, 1);
-        color: white;
-        width:20px;
-        height:20px;
-        border: none;
-        border-radius: 5px;
-        font-size: 20px;
-        outline: none;
-      }
-      input::-webkit-outer-spin-button,
-      input::-webkit-inner-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
-      }
-      input.show-buttons::-webkit-outer-spin-button,
-      input.show-buttons::-webkit-inner-spin-button {
-        -webkit-appearance: inner-spin-button !important;
-      }
-      input::placeholder{
-        color: rgb(146, 146, 146);
-      }
-      input:disabled{
-        background-color: rgba(80, 80, 80, 1);
-        color:rgb(146, 146, 146);
-      }
-      button{
-        background-color: rgba(100, 100, 100, 1);
-        color: white;
-        width:200px;
-        height:30px;
-        border: none;
-        border-radius: 5px;
-        font-size: 20px;
-        margin-bottom: 3px;
-        outline: none;
-        transition: background-color 0.1s ease-out;
-      }
-      button:hover{
-        background-color: rgba(90, 90, 90, 1);
-      }
-      button:active{
-        background-color: rgba(85, 85, 85, 1);
-      }
-      .dropdown-button{
-        background-color: rgba(69, 69, 69, 1) !important;
-        text-align: left;
-        width:200px;
-        height:30px;
-        font-size: 20px;
-        outline: none;
-      }
-      label{
-        font-size: 20px;
-      }
-      .red{
-        color: red;
-      }
-      canvas{
-        top: 0px;
-        left: 0px;
-        padding: 0px;
-        margin: 0px;
-      }
-      .no-space{
-        margin: 0px;
-        padding: 0px;
-      }
-      .content{
-        display: none;
-        padding: 0 18px;
-      }
-    </style>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>MrDiamondDog Matter Sandbox</title>
+    <meta content="MrDiamondDog.github.io" property="og:title"/>
+    <meta content="null" property="og:description"/>
+    <meta content="https://mrdiamonddog.github.io" property="og:url"/>
+    <meta name="og:image" content="https://mrdiamonddog.github.io/Images/embed.png">
+    <meta name="og:image:width" content="1200">
+    <meta name="og:image:height" content="1000">
+    <meta content="#001eff" data-react-helmet="true" name="theme-color"/>
   </head>
   <body>
     <script src="matter.js"></script>
+    <link rel="stylesheet" href="main.css">
   </body>
   <body id="bottom">
-    <script src="main-p.js"></script>
-    <br>
+    <script src="main.js"></script>
+      <br>
     <p>Click and drag on an object to move it</p>
     <br>
     <button id="clear">Clear</button>
@@ -170,7 +59,7 @@
       <button id="spawn">Spawn</button>
       <button id="random">Random Values</button>
       <br>
-      <h2 id="error" class="red"></h2>
+      <h3 id="error" class="red no-space"></h2>
     </div>
     <br>
     <div id="pointer">
@@ -199,8 +88,19 @@
         <p>Waiting...</p>
       </div>
       <br>
-      <input type="text" placeholder="Variable to edit -WIP-">
-      <input type="number" placeholder="Index (if needed) -WIP-">
+      <br>
+      <input type="text" placeholder="ID of body*" id="edit-id">
+      <br>
+      <input type="text" placeholder="Variable to edit*" id="edit-toedit">
+      <input type="number" placeholder="Index" id="edit-index">
+      <input type="text" placeholder="Sub Variable" id="edit-sub">
+      <br>
+      <input type="text" placeholder="New Value" id="edit-value">
+      <br>
+      <button id="edit-submit">Edit</button>
+      <div id="edit-prev"></div>
+      <p class="no-space faded">* = required</p>
+      <h3 id="edit-err" class="red no-space"></h3>
     </div>
     <br>
     <div id="settings">

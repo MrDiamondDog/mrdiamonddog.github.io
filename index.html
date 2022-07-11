@@ -18,45 +18,140 @@
     <meta content="#001eff" data-react-helmet="true" name="theme-color"/>
 
     <link href="main.css" rel="stylesheet">
+
+    <style>
+      body{
+        background-color: #696969;
+      }
+    </style>
   </head>
   <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-mynav">
-      <div class="container-fluid">
-        <a class="navbar-brand" href="index.html">MrDiamondDog</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            <li class="nav-item">
-                <a class="nav-link" href="skyblock_gen.html" id="fname" role="button" aria-expanded="false">
-                  Skyblock Item Gen
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="crafting.html" id="fname" role="button" aria-expanded="false">
-                  Custom Crafting Generator
-                </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="Slingshot Puzzles/index.html" id="fname" role="button" aria-expanded="false">
-                Cool Math Game Preview
-              </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="physique.html" id="fname" role="button" aria-expanded="false">
-              Physique
-            </a>
-          </li>
+    <!--
+      <img src="Images/capybara-ok-he-pull-up (1).gif">
+      <img src="Images/capybara-orange (1).gif">
+      <img src="Images/ezgif-4-2504b80721.gif">
+      <img src="Images/goat of the week.gif">
+      <img src="Images/meth.png">
+      <img src="Images/embed.png">
+    -->
+
+    <script src="matter.js"></script>
+    <script>
+      // module aliases
+      var Engine = Matter.Engine,
+              Render = Matter.Render,
+              Runner = Matter.Runner,
+              Events = Matter.Events,
+              Composites = Matter.Composites,
+              Common = Matter.Common,
+              MouseConstraint = Matter.MouseConstraint,
+              Mouse = Matter.Mouse,
+              Composite = Matter.Composite,
+              Vector = Matter.Vector,
+              Bounds = Matter.Bounds,
+              Bodies = Matter.Bodies,
+              Body = Matter.Body;
+
+      // create an engine
+      var engine = Engine.create(),
+              world = engine.world;
+
+      // create a renderer
+      var render = Render.create({
+          element: document.body,
+          engine: engine,
+          options: {
+              width: 1080,
+              height: 720,
+              wireframes: false,
+          }
+      });
+
+      var ground = Bodies.rectangle(render.options.width / 2, render.options.height, render.options.width, 10, { isStatic: true, render: { fillStyle: '#696969' }, label: 'ground' });
+      var wallL = Bodies.rectangle(0, render.options.height / 2, 10, render.options.height, { isStatic: true, render: { fillStyle: '#696969' }, label: 'wallL' });
+      var wallR = Bodies.rectangle(render.options.width, render.options.height / 2, 10, render.options.height, { isStatic: true, render: { fillStyle: '#696969' }, label: 'wallR' });
+      var ceiling = Bodies.rectangle(render.options.width / 2, 0, render.options.width, 10, { isStatic: true, render: { fillStyle: '#696969' }, label: 'ceiling' });
+      var selector = Bodies.rectangle(render.options.width / 2, render.options.height / 2, 100, 100, { render: { fillStyle: '#0091ff' }, label: 'selector' });
+
+      for (var i = 0; i < 100; i++) {
+          var body = Bodies.circle(Math.random() * render.options.width, Math.random() * render.options.height, 2, { render: { fillStyle: '#2c3e50' }, friction: 0 });
+          body.collisionFilter = {
+              'group': -1,
+              'category': 2,
+              'mask': 0,
+          };
+          Composite.add(engine.world, [body]);
+      }
+
+      // add all of the bodies to the world
+      Composite.add(engine.world, [ground, wallL, wallR, ceiling, selector]);
+
+      engine.world.gravity.y = 0;
+
+      // add mouse control
+      var mouse = Mouse.create(render.canvas),
+      mouseConstraint = MouseConstraint.create(engine, {
+          mouse: mouse,
+          constraint: {
+              stiffness: 0.1,
+              render: {
+                  visible: false
+              }
+          }
+      });
+
+      Composite.add(world, mouseConstraint);
+
+      // keep the mouse in sync with rendering
+      render.mouse = mouse;
+
+      // run the renderer
+      Render.run(render);
+
+      // create runner
+      var runner = Runner.create();
+
+      // run the engine
+      Runner.run(runner, engine);
+
+      document.querySelector("canvas").classList.add("middle-canvas");
+
+      function randomInt(min, max){
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+      }
+
+      Events.on(engine, 'collisionStart', function(event) {
+          var pairs = event.pairs;
+
+          for (var i = 0; i < pairs.length; i++) {
+              var pair = pairs[i];
+
+              if (pair.bodyA.label == 'selector' && pair.bodyB.label == 'ceiling') {
+                  document.location.href = "./games";
+              } else if (pair.bodyB.label == 'selector' && pair.bodyA.label == 'ceiling') {
+                  document.location.href = "./games";
+              }
+          }
+      });
+    </script>
+
+    <h1 class="middle" style="color:white; padding-top: 20px;">MrDiamondDog.github.io</h1>
+    <h4 class="middle" style="color:white">Site made by MrDiamond</h4>
+    <br>
+    <h4 class="middle" style="color:white">Hit a side with the cube to go to that page</h4>
+    <h4 class="middle" style="color:white">Click and drag to move the cube</h4>
+
+    <img src="Images/canvas-back.png" class="middle-canvas" style="z-index: -10000;" width="1160" height="800"></img>
+    
+    <footer>
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12 text-center">
+            <p id="tag" style="display:none">Tag copied to clipboard</p>
+            <img src="Images/discord-icon.svg" width="50" height="50" style="filter: brightness(1000);" class="hover-cursor" onclick="navigator.clipboard.writeText('Diamond#0102'); document.getElementById('tag').style.display = 'block'">
+          </div>
         </div>
       </div>
-    </nav>
-
-    <img src="Images/capybara-ok-he-pull-up (1).gif">
-    <img src="Images/capybara-orange (1).gif">
-    <img src="Images/ezgif-4-2504b80721.gif">
-    <img src="Images/goat of the week.gif">
-    <img src="Images/meth.png">
-    <img src="Images/embed.png">
+    </footer>
   </body>
 </html>

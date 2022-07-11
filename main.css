@@ -31,9 +31,48 @@ textarea{
     align-content: center;
 }
 
+.middle-canvas{
+    padding: 0;
+    margin: auto;
+    display: block;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    color: white;
+    text-align: center;
+  }
+
+.middle-vertical{
+    /* center vertically */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    align-self:center;
+    justify-self: center;
+    justify-items: center;
+    align-content: center;
+}
+
 .centered-div{
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+}
+
+.hover-cursor:hover{
+    cursor: pointer;
+}
+
+.circle{
+    border-radius: 100%;
 }

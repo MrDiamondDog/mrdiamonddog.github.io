@@ -42,6 +42,14 @@ window.addEventListener('load', function () {
     var id = document.querySelector("#bottom input[name='id']");
     var find = document.querySelector("#bottom button[name='find']");
     var info = document.querySelector("#bottom #info");
+    var toedit = document.querySelector("#bottom #edit-toedit");
+    var index = document.querySelector("#bottom #edit-index");
+    var subvar = document.querySelector("#bottom #edit-sub");
+    var editsubmit = document.querySelector("#bottom #edit-submit");
+    var editpreview = document.querySelector("#bottom #edit-prev");
+    var editid = document.querySelector("#bottom #edit-id");
+    var editerr = document.querySelector("#bottom #edit-err");
+    var editvalue = document.querySelector("#bottom #edit-value");
 
     shapechooser.onchange = function() {
         if (shapechooser.value == 'rect'){
@@ -270,70 +278,150 @@ window.addEventListener('load', function () {
     }
 
     find.onclick = function() {
-        info.innerHTML = "";
-        var body = GetBodyFromID(id.value);
-        if (body){
-            for (variable in body){
-                info.innerHTML += variable + ": " + body[variable];
-            }
-        } else {
-            info.innerHTML = "No body found with ID: " + id.value;
-        }
+        info.innerHTML = GetBodyInformation(GetBodyFromID(id.value));
     }
 
     Events.on(mouseConstraint, "startdrag", function(event){
-        info.innerHTML = "";
-        for (variable in event.body) {
-            if (variable == "positionImpulse" || variable == "constraintImpulse" || variable == "positionPrev" || variable == "parent" || variable == "parts" || variable == "plugin" || variable == "render" || variable == "_original") continue;
-            
-            if (variable == 'vertices'){
-                info.innerHTML += variable + ": [";
-                for (var i = 0; i < event.body.vertices.length; i++) {
-                    info.innerHTML += "<p style='padding-left: 30px'>" + event.body.vertices[i].x + ", " + event.body.vertices[i].y + "</p>";
-                }
-                info.innerHTML += "]";
-                continue;
-            }
-            if (variable == 'position'){
-                info.innerHTML += "<p>Position: " + event.body.position.x + ", " + event.body.position.y + "</p>";
-                continue;
-            }
-            if (variable == 'velocity'){
-                info.innerHTML += "<p>Velocity: " + event.body.velocity.x + ", " + event.body.velocity.y + "</p>";
-                continue;
-            }
-            if (variable == 'force'){
-                info.innerHTML += "<p>Force: " + event.body.force.x + ", " + event.body.force.y + "</p>";
-                continue;
-            }
-            if (variable == 'collisionFilter'){
-                info.innerHTML += "<p>Collision Filter: [</p>";
-                info.innerHTML += "<p style='padding-left: 30px'>category: " + event.body.collisionFilter.category + "</p>";
-                info.innerHTML += "<p style='padding-left: 30px'>mask: " + event.body.collisionFilter.mask + "</p>";
-                info.innerHTML += "<p style='padding-left: 30px'>group: " + event.body.collisionFilter.group + "</p>";
-                info.innerHTML += "<p>]</p>";
-                continue;
-            }
-            if (variable == 'bounds'){
-                info.innerHTML += "<p>Bounds: [</p>";
-                info.innerHTML += "<p style='padding-left: 30px'>min: " + event.body.bounds.min.x + ", " + event.body.bounds.min.y + "</p>";
-                info.innerHTML += "<p style='padding-left: 30px'>max: " + event.body.bounds.max.x + ", " + event.body.bounds.max.y + "</p>";
-                info.innerHTML += "<p>]</p>";
-                continue;
-            }
-            if (variable == 'axes'){
-                info.innerHTML += "<p>Axes: [</p>";
-                for (var i = 0; i < event.body.axes.length; i++) {
-                    info.innerHTML += "<p style='padding-left: 30px'>" + event.body.axes[i].x + ", " + event.body.axes[i].y + "</p>";
-                }
-                info.innerHTML += "]</p>";
-                continue;
-            }
-
-            info.innerHTML += "<p>" + variable + ": " + event.body[variable] + "</p>";
-        }
+        info.innerHTML = GetBodyInformation(event.body);
     });
+
+    toedit.onchange = function() { ChangePreview(editid, toedit, editpreview) };
+    index.onchange = function() { ChangePreview(editid, toedit, editpreview) };
+    subvar.onchange = function() { ChangePreview(editid, toedit, editpreview) };
+
+    editpreview.onclick = function() {
+        if (!GetBodyFromID(editid.value)){
+            editerr.innerHTML = "Body of id " + editid.value + " not found!";
+            return;
+        }
+        if (!GetBodyFromID(editid.value).hasOwnProperty(toedit.value)){
+            editerr.innerHTML = "Variable '" + toedit.value + "' not found!";
+            return;
+        }
+
+        editerr.innerHTML = "";
+        editpreview.innerHTML = CheckBodyVariable(GetBodyFromID(editid.value), toedit.value);
+    };
+    
+    editsubmit.onclick = function() {
+        if (!GetBodyFromID(editid.value)){
+            editerr.innerHTML = "Body of id " + editid.value + " not found!";
+            return;
+        }
+        if (!GetBodyFromID(editid.value).hasOwnProperty(toedit.value)){
+            editerr.innerHTML = "Variable '" + toedit.value + "' not found!";
+            return;
+        }
+
+        editerr.innerHTML = "";
+        editpreview.innerHTML = SetBodyVariable(GetBodyFromID(editid.value), toedit.value, index.value, subvar.value, editvalue.value);
+    }
 });
+
+function SetBodyVariable(body, variable, index, subvar, newvalue){
+    if (index == '' && subvar == ''){
+        var old = CheckBodyVariable(body, variable);
+        body[variable] = newvalue;
+        return "<p>Old:</p>" + old + "<p>New:</p>" + CheckBodyVariable(body, variable);
+    }
+    if (index == '' && subvar != ''){
+        var old = CheckBodyVariable(body, variable);
+        body[variable][subvar] = newvalue;
+        return "<p>Old:</p>" + old + "<p>New:</p>" + CheckBodyVariable(body, variable);
+    }
+    if (!index == '' && !subvar == ''){
+        var old = CheckBodyVariable(body, variable);
+        if (typeof(body[variable][index][subvar]) == 'number') body[variable][index][subvar] = parseInt(newvalue);
+        else body[variable][index][subvar] = newvalue;
+        return "<p>Old:</p>" + old + "<p>New:</p>" + CheckBodyVariable(body, variable);
+    }
+}
+
+function ChangePreview(editid, toedit, preview){
+    if (!GetBodyFromID(editid.value)){
+        return;
+    }
+    if (!GetBodyFromID(editid.value).hasOwnProperty(toedit.value)){
+        return;
+    }
+
+    preview.innerHTML = CheckBodyVariable(GetBodyFromID(editid.value), toedit.value);
+}
+
+function GetBodyInformation(body){
+    var str = "";
+    
+    for (variable in body) {
+        str += CheckBodyVariable(body, variable);
+    }
+
+    return str;
+}
+
+function CheckBodyVariable(body, variable){
+    if (variable == "plugin" || variable == "render" || variable == "_original" || variable == "parts" || variable == "parent") return "";
+    
+    var str = ""
+
+    if (variable == 'vertices'){
+        str += variable + ": [";
+        for (var i = 0; i < body.vertices.length; i++) {
+            str += "<p style='padding-left: 30px'>[" + i + "]: { x: " + body.vertices[i].x + ", y: " + body.vertices[i].y + " }</p>";
+        }
+        str += "]";
+        return str;
+    }
+    if (variable == 'position'){
+        str += "<p>position: { x: " + body.position.x + ", y: " + body.position.y + " }</p>";
+        return str;
+    }
+    if (variable == 'positionPrev'){
+        str += "<p>positionPrev: { x: " + body.positionPrev.x + ", y: " + body.positionPrev.y + " }</p>";
+        return str;
+    }
+    if (variable == 'positionImpulse'){
+        str += "<p>positionImpulse: { x: " + body.positionImpulse.x + ", y: " + body.positionImpulse.y + " }</p>";
+        return str;
+    }
+    if (variable == 'constraintImpulse'){
+        str += "<p>constraintImpulse: { x: " + body.constraintImpulse.x + ", y: " + body.constraintImpulse.y + ", angle: " + body.constraintImpulse.angle + " }</p>";
+        return str;
+    }
+    if (variable == 'velocity'){
+        str += "<p>velocity: { x: " + body.velocity.x + ", y: " + body.velocity.y + " }</p>";
+        return str;
+    }
+    if (variable == 'force'){
+        str += "<p>force: { x: " + body.force.x + ", y: " + body.force.y + " }</p>";
+        return str;
+    }
+    if (variable == 'collisionFilter'){
+        str += "<p>collisionFilter: {</p>";
+        str += "<p style='padding-left: 30px'>category: " + body.collisionFilter.category + "</p>";
+        str += "<p style='padding-left: 30px'>mask: " + body.collisionFilter.mask + "</p>";
+        str += "<p style='padding-left: 30px'>group: " + body.collisionFilter.group + "</p>";
+        str += "<p>}</p>";
+        return str;
+    }
+    if (variable == 'bounds'){
+        str += "<p>bounds: {</p>";
+        str += "<p style='padding-left: 30px'>min: { x: " + body.bounds.min.x + ", y: " + body.bounds.min.y + " }</p>";
+        str += "<p style='padding-left: 30px'>max: { x: " + body.bounds.max.x + ", y: " + body.bounds.max.y + " }</p>";
+        str += "<p>}</p>";
+        return str;
+    }
+    if (variable == 'axes'){
+        str += "<p>axes: [</p>";
+        for (var i = 0; i < body.axes.length; i++) {
+            str += "<p style='padding-left: 30px'>[" + i + "]: { x: " + body.axes[i].x + ", y: " + body.axes[i].y + " }</p>";
+        }
+        str += "]</p>";
+        return str;
+    }
+
+    str += "<p>" + variable + ": " + body[variable] + "</p>";
+    return str;
+}
 
 function UpdateRenderSettings(wireframe, showDebug, showPositions, showBounds, showVel, showColl, showAxes, showAngle, showIds, showVert) {
     render.options.wireframes = wireframe.checked;
