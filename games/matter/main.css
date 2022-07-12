@@ -11,6 +11,16 @@ p, a, h1, h2, h3, h4, label, input, select, button, div {
   color: white;
   font-family: consolas;
 }
+.middle-canvas{
+  padding: 0;
+  margin: auto;
+  display: block;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
 select {
   background-color: rgba(100, 100, 100, 1);
   color: white;
@@ -22,7 +32,7 @@ select {
   font-size: 20px;
   outline: none;
 }
-input:not([type='checkbox']) {
+input:not([type='checkbox']), textarea {
   background-color: rgba(100, 100, 100, 1);
   color: white;
   width:200px;
@@ -52,7 +62,7 @@ input.show-buttons::-webkit-outer-spin-button,
 input.show-buttons::-webkit-inner-spin-button {
   -webkit-appearance: inner-spin-button !important;
 }
-input::placeholder{
+input::placeholder, textarea::placeholder {
   color: rgb(146, 146, 146);
 }
 input:disabled{
@@ -104,4 +114,60 @@ canvas{
 .content{
   display: none;
   padding: 0 18px;
+}
+#sortable .sort-child{
+  border-left:rgb(114, 114, 114) solid 7px;
+  padding-left:10px;
+  margin-top:10px;
+  margin-bottom:10px;
+}
+.ui-state-highlight{
+  background-color: rgb(100, 100, 100);
+  border: none;
+  height: 10em; 
+  line-height: 12em;
+}
+.ui-sortable-helper{
+  background-color: rgba(69, 69, 69, 0.9);
+}
+.ins-container{
+  right: 0 !important;
+  left: unset !important;
+  background: rgb(85, 85, 85);
+}
+.ins-top-panel{
+  display:none !important;
+}
+.jstree-anchor{
+  color: rgb(212, 212, 212) !important;
+}
+.jstree-default .jstree-open > .jstree-children > .jstree-node > .jstree-anchor:before{
+  background: rgba(72, 72, 72, 0) !important;
+}
+.jstree-default .jstree-open > .jstree-children > .jstree-node > .jstree-clicked{
+  color: white !important;
+}
+.ins-add-button{
+  display:none !important;
+}
+.ins-search-box{
+  background-color: rgba(100, 100, 100, 1) !important;
+  color: white !important;
+  width:200px !important;
+  height:30px !important;
+  border: none !important;
+  border-radius: 5px !important;
+  font-size: 20px !important;
+  margin-bottom: 3px !important;
+  outline: none !important;
+}
+.ins-world-tree{
+  top: 45px !important;
+}
+.ins-search-box::placeholder{
+  color: rgb(146, 146, 146) !important;
+}
+.ins-search-box:disabled{
+  background-color: rgba(80, 80, 80, 1) !important;
+  color:rgb(146, 146, 146) !important;
 }

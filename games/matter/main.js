@@ -1,4 +1,5 @@
 var AllBodies = []
+let currentBody;
 
 window.addEventListener('load', function () {
     // spawner
@@ -43,13 +44,13 @@ window.addEventListener('load', function () {
     var find = document.querySelector("#bottom button[name='find']");
     var info = document.querySelector("#bottom #info");
     var toedit = document.querySelector("#bottom #edit-toedit");
-    var index = document.querySelector("#bottom #edit-index");
-    var subvar = document.querySelector("#bottom #edit-sub");
     var editsubmit = document.querySelector("#bottom #edit-submit");
     var editpreview = document.querySelector("#bottom #edit-prev");
     var editid = document.querySelector("#bottom #edit-id");
     var editerr = document.querySelector("#bottom #edit-err");
     var editvalue = document.querySelector("#bottom #edit-value");
+
+    var keep = document.querySelector("#bottom input[name='keep']");
 
     shapechooser.onchange = function() {
         if (shapechooser.value == 'rect'){
@@ -279,149 +280,86 @@ window.addEventListener('load', function () {
 
     find.onclick = function() {
         info.innerHTML = GetBodyInformation(GetBodyFromID(id.value));
+        currentBody = GetBodyFromID(id.value);
     }
 
     Events.on(mouseConstraint, "startdrag", function(event){
         info.innerHTML = GetBodyInformation(event.body);
+        currentBody = event.body;
     });
 
-    toedit.onchange = function() { ChangePreview(editid, toedit, editpreview) };
-    index.onchange = function() { ChangePreview(editid, toedit, editpreview) };
-    subvar.onchange = function() { ChangePreview(editid, toedit, editpreview) };
-
-    editpreview.onclick = function() {
-        if (!GetBodyFromID(editid.value)){
-            editerr.innerHTML = "Body of id " + editid.value + " not found!";
-            return;
-        }
-        if (!GetBodyFromID(editid.value).hasOwnProperty(toedit.value)){
-            editerr.innerHTML = "Variable '" + toedit.value + "' not found!";
-            return;
-        }
-
-        editerr.innerHTML = "";
-        editpreview.innerHTML = CheckBodyVariable(GetBodyFromID(editid.value), toedit.value);
-    };
-    
     editsubmit.onclick = function() {
-        if (!GetBodyFromID(editid.value)){
-            editerr.innerHTML = "Body of id " + editid.value + " not found!";
-            return;
-        }
-        if (!GetBodyFromID(editid.value).hasOwnProperty(toedit.value)){
-            editerr.innerHTML = "Variable '" + toedit.value + "' not found!";
-            return;
-        }
+        SetBody(info.innerHTML);
+    }
 
-        editerr.innerHTML = "";
-        editpreview.innerHTML = SetBodyVariable(GetBodyFromID(editid.value), toedit.value, index.value, subvar.value, editvalue.value);
+    window.addEventListener('resize', function() {
+        render.canvas.width = document.documentElement.clientWidth - 35;
+        Body.setPosition(wallR, Vector.create(document.documentElement.clientWidth - 35 + 45, 300))
+    });
+
+    keep.onchange = function() {
+        if (keep.checked) {
+            render.canvas.style.position = 'sticky';
+        }
+        else {
+            render.canvas.style.position = 'static';
+        }
     }
 });
 
-function SetBodyVariable(body, variable, index, subvar, newvalue){
-    if (index == '' && subvar == ''){
-        var old = CheckBodyVariable(body, variable);
-        body[variable] = newvalue;
-        return "<p>Old:</p>" + old + "<p>New:</p>" + CheckBodyVariable(body, variable);
-    }
-    if (index == '' && subvar != ''){
-        var old = CheckBodyVariable(body, variable);
-        body[variable][subvar] = newvalue;
-        return "<p>Old:</p>" + old + "<p>New:</p>" + CheckBodyVariable(body, variable);
-    }
-    if (!index == '' && !subvar == ''){
-        var old = CheckBodyVariable(body, variable);
-        if (typeof(body[variable][index][subvar]) == 'number') body[variable][index][subvar] = parseInt(newvalue);
-        else body[variable][index][subvar] = newvalue;
-        return "<p>Old:</p>" + old + "<p>New:</p>" + CheckBodyVariable(body, variable);
-    }
-}
+function SetBody(newvalue){
+    var values = JSON.parse(newvalue);
 
-function ChangePreview(editid, toedit, preview){
-    if (!GetBodyFromID(editid.value)){
-        return;
-    }
-    if (!GetBodyFromID(editid.value).hasOwnProperty(toedit.value)){
-        return;
+    const previousBody = JSON.parse(GetBodyInformation(currentBody));
+
+    console.log(previousBody);
+
+    for (variable in currentBody){
+        console.log(variable);
+        if (variable == 'parent' || variable == "parts") {
+            console.log("continuing")
+            continue;
+        }
+        if (variable == 'position') {
+            currentBody.position = currentBody.position;
+        }
+        console.log(previousBody[variable] == values[variable])
+        if (previousBody[variable] != values[variable]){
+            Body.set(currentBody, variable, values[variable]);
+            console.log("setting " + variable + " to %O", values[variable]);
+        }
     }
 
-    preview.innerHTML = CheckBodyVariable(GetBodyFromID(editid.value), toedit.value);
+    console.log(currentBody);
+    info.innerHTML = GetBodyInformation(currentBody);
 }
 
 function GetBodyInformation(body){
-    var str = "";
-    
-    for (variable in body) {
-        str += CheckBodyVariable(body, variable);
-    }
-
+    var str = JSON.safeStringify(body);
     return str;
 }
 
 function CheckBodyVariable(body, variable){
-    if (variable == "plugin" || variable == "render" || variable == "_original" || variable == "parts" || variable == "parent") return "";
-    
-    var str = ""
-
-    if (variable == 'vertices'){
-        str += variable + ": [";
-        for (var i = 0; i < body.vertices.length; i++) {
-            str += "<p style='padding-left: 30px'>[" + i + "]: { x: " + body.vertices[i].x + ", y: " + body.vertices[i].y + " }</p>";
-        }
-        str += "]";
-        return str;
-    }
-    if (variable == 'position'){
-        str += "<p>position: { x: " + body.position.x + ", y: " + body.position.y + " }</p>";
-        return str;
-    }
-    if (variable == 'positionPrev'){
-        str += "<p>positionPrev: { x: " + body.positionPrev.x + ", y: " + body.positionPrev.y + " }</p>";
-        return str;
-    }
-    if (variable == 'positionImpulse'){
-        str += "<p>positionImpulse: { x: " + body.positionImpulse.x + ", y: " + body.positionImpulse.y + " }</p>";
-        return str;
-    }
-    if (variable == 'constraintImpulse'){
-        str += "<p>constraintImpulse: { x: " + body.constraintImpulse.x + ", y: " + body.constraintImpulse.y + ", angle: " + body.constraintImpulse.angle + " }</p>";
-        return str;
-    }
-    if (variable == 'velocity'){
-        str += "<p>velocity: { x: " + body.velocity.x + ", y: " + body.velocity.y + " }</p>";
-        return str;
-    }
-    if (variable == 'force'){
-        str += "<p>force: { x: " + body.force.x + ", y: " + body.force.y + " }</p>";
-        return str;
-    }
-    if (variable == 'collisionFilter'){
-        str += "<p>collisionFilter: {</p>";
-        str += "<p style='padding-left: 30px'>category: " + body.collisionFilter.category + "</p>";
-        str += "<p style='padding-left: 30px'>mask: " + body.collisionFilter.mask + "</p>";
-        str += "<p style='padding-left: 30px'>group: " + body.collisionFilter.group + "</p>";
-        str += "<p>}</p>";
-        return str;
-    }
-    if (variable == 'bounds'){
-        str += "<p>bounds: {</p>";
-        str += "<p style='padding-left: 30px'>min: { x: " + body.bounds.min.x + ", y: " + body.bounds.min.y + " }</p>";
-        str += "<p style='padding-left: 30px'>max: { x: " + body.bounds.max.x + ", y: " + body.bounds.max.y + " }</p>";
-        str += "<p>}</p>";
-        return str;
-    }
-    if (variable == 'axes'){
-        str += "<p>axes: [</p>";
-        for (var i = 0; i < body.axes.length; i++) {
-            str += "<p style='padding-left: 30px'>[" + i + "]: { x: " + body.axes[i].x + ", y: " + body.axes[i].y + " }</p>";
-        }
-        str += "]</p>";
-        return str;
-    }
-
-    str += "<p>" + variable + ": " + body[variable] + "</p>";
+    var str = JSON.safeStringify(body[variable], 4);
     return str;
 }
+
+JSON.safeStringify = (obj, indent = 2) => {
+    let cache = [];
+    const retVal = JSON.stringify(
+      obj,
+      (key, value) =>
+        typeof value === "object" && value !== null
+          ? cache.includes(value)
+            ? undefined // Duplicate reference found, discard key
+            : cache.push(value) && value // Store value in our collection
+          : value,
+      indent
+    );
+    cache = null;
+
+    return retVal;
+  };
 
 function UpdateRenderSettings(wireframe, showDebug, showPositions, showBounds, showVel, showColl, showAxes, showAngle, showIds, showVert) {
     render.options.wireframes = wireframe.checked;
@@ -434,6 +372,10 @@ function UpdateRenderSettings(wireframe, showDebug, showPositions, showBounds, s
     render.options.showAngleIndicator = showAngle.checked;
     render.options.showIds = showIds.checked;
     render.options.showVertices = showVert.checked;
+}
+
+function OnSelectInspector(selected){
+
 }
 
 function getRandomInt(min, max) {
@@ -451,18 +393,19 @@ function GetBodyFromID(id) {
 
 // module aliases
 var Engine = Matter.Engine,
-        Render = Matter.Render,
-        Runner = Matter.Runner,
-        Events = Matter.Events,
-        Composites = Matter.Composites,
-        Common = Matter.Common,
-        MouseConstraint = Matter.MouseConstraint,
-        Mouse = Matter.Mouse,
-        Composite = Matter.Composite,
-        Vector = Matter.Vector,
-        Bounds = Matter.Bounds,
-        Bodies = Matter.Bodies,
-        Body = Matter.Body;
+    Render = Matter.Render,
+    Runner = Matter.Runner,
+    Events = Matter.Events,
+    Composites = Matter.Composites,
+    Common = Matter.Common,
+    MouseConstraint = Matter.MouseConstraint,
+    Mouse = Matter.Mouse,
+    Composite = Matter.Composite,
+    Vector = Matter.Vector,
+    Bounds = Matter.Bounds,
+    Bodies = Matter.Bodies,
+    Body = Matter.Body,
+    Gui = MatterTools.Gui;
 
 // create an engine
 var engine = Engine.create(),
@@ -473,11 +416,13 @@ var render = Render.create({
     element: document.body,
     engine: engine,
     options: {
-        width: 770,
+        width: document.documentElement.clientWidth - 35,
         height: 525,
         wireframes: false,
     }
 });
+
+var inspector = MatterTools.Inspector.create(engine, render, {})
 
 //                           xx, yy, columns, rows, columnGap, rowGap, callback
 var stack = Composites.stack(200, 320, 5, 5, 0, 0, function(x, y) {
@@ -491,10 +436,10 @@ pointer.collisionFilter = {
     'mask': 0,
 };
 
-var ground = Bodies.rectangle(400, 550, 810, 60, { isStatic: true, render: {fillStyle: 'gray'} });
-var wallL = Bodies.rectangle(0, 300, 10, 600, { isStatic: true, render: {fillStyle: 'gray'}  });
-var wallR = Bodies.rectangle(770, 300, 10, 600, { isStatic: true, render: {fillStyle: 'gray'}  });
-var ceiling = Bodies.rectangle(400, 0, 810, 10, { isStatic: true, render: {fillStyle: 'gray'}  });
+var ground = Bodies.rectangle(400, 550 + 20, document.documentElement.clientWidth + 5000, 100, { isStatic: true, render: {fillStyle: 'gray'} });
+var wallL = Bodies.rectangle(-45, 300, 100, 600, { isStatic: true, render: {fillStyle: 'gray'}  });
+var wallR = Bodies.rectangle(document.documentElement.clientWidth - 35 + 45, 300, 100, 600, { isStatic: true, render: {fillStyle: 'gray'}  });
+var ceiling = Bodies.rectangle(400, -45, document.documentElement.clientWidth + 5000, 100, { isStatic: true, render: {fillStyle: 'gray'}  });
 
 // add all of the bodies to the world
 Composite.add(engine.world, [pointer, stack, ground, wallL, wallR, ceiling]);
@@ -502,6 +447,8 @@ for (var i = 0; i < stack.bodies.length; i++) {
     AllBodies.push(stack.bodies[i]);
 }
 AllBodies.push(ground, wallL, wallR, ceiling);
+
+var wallRid = wallR.id;
 
 // add mouse control
 var mouse = Mouse.create(render.canvas),
@@ -528,6 +475,13 @@ var runner = Runner.create();
 
 // run the engine
 Runner.run(runner, engine);
+
+// console messages
+console.log("%cHey!", "color:red;font-size:50px")
+console.log("%cIt's nice to see you. Want a little insight about the code?", "font-size:20px")
+console.log("%cGo check out the GitHub repo. " + "%chttps://www.github.com/MrDiamondDog/mrdiamonddog.github.io", "font-size:20px", "font-size:10px;color:blue")
+console.log("%cAnyways, there are some pretty advanced things you can do here. Some functions may not be able to be used properly. Also, be careful. You can crash yourself pretty easily.", "font-size:20px")
+console.log("%cYou can type " + "%cHelp()" + "%c for help.", "font-size:20px;", "font-size:20px;background-color:rgb(0,0,0);border-radius:5px;padding:3px", "font-size:20px")
 
 function Cloth(xx, yy, columns, rows, columnGap, rowGap, crossBrace, particleRadius, particleOptions, constraintOptions) {
     var Body = Matter.Body,
@@ -850,3 +804,15 @@ function Ragdoll(x, y, scale, options) {
 
     return person;
 };
+
+function Help(){
+    console.log("%cHere are some functions you can use. They are complicated, so good luck." + "%c\n* = HTML formatted string", "font-size:20px", "font-size:9px")
+    console.log("%cCloth(xx, yy, columns, rows, columnGap, rowGap, crossBrace, particleRadius, particleOptions, constraintOptions) : Composite", "font-size:14px;background-color:rgb(0,0,0);border-radius:5px;padding:3px")
+    console.log("%cRagdoll(x, y, scale, options) : Composite", "font-size:14px;background-color:rgb(0,0,0);border-radius:5px;padding:3px")
+    console.log("%cGetBodyFromID(id) : Body", "font-size:14px;background-color:rgb(0,0,0);border-radius:5px;padding:3px")
+    console.log("%cSetBody(newvalue) : Void", "font-size:14px;background-color:rgb(0,0,0);border-radius:5px;padding:3px")
+    console.log("%cCheckBodyVariable(body, variable) : String", "font-size:14px;background-color:rgb(0,0,0);border-radius:5px;padding:3px")
+    console.log("%cUpdateRenderSettings(wireframe, showDebug, showPositions, showBounds, showVel, showColl, showAxes, showAngle, showIds, showVert) : Void", "font-size:14px;background-color:rgb(0,0,0);border-radius:5px;padding:3px")
+    console.log("%cGetBodyInformation(body) : String", "font-size:14px;background-color:rgb(0,0,0);border-radius:5px;padding:3px")
+    console.log("%cFunctions that create bodies or composites must be added to the world using " + "%cComposite.add(world, body) : Void", "font-size:20px;color:red", "font-size:14px;background-color:rgb(0,0,0);border-radius:5px;padding:3px")
+}

@@ -1,13 +1,26 @@
-<!--Why didn't the commit work-->
+<!--
+  Hey, what are you doing here?
+  Look, I don't care what you look at here.
+  Don't judge. This code sucks.
+
+  I didn't use the inline 'onclick' or anything
+  because it would not work. I'm not going to worry
+  about it anymore. 
+
+  If you find anything that you think is wrong or a bug,
+  make a bug report on the GitHub repo. Or show me something cool,
+  or give me a suggestion. Please.
+  https://github.com/MrDiamondDog/mrdiamonddog.github.io/issues/new
+-->
 
 <!DOCTYPE html>
 <html>
   <head>
-    <!-- Required meta tags -->
+    <title>MrDiamondDog Matter Sandbox</title>
+
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>MrDiamondDog Matter Sandbox</title>
     <meta content="MrDiamondDog.github.io" property="og:title"/>
     <meta content="null" property="og:description"/>
     <meta content="https://mrdiamonddog.github.io" property="og:url"/>
@@ -15,135 +28,136 @@
     <meta name="og:image:width" content="1200">
     <meta name="og:image:height" content="1000">
     <meta content="#001eff" data-react-helmet="true" name="theme-color"/>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
   </head>
   <body>
     <script src="matter.js"></script>
+    <script src="matter-tools.inspector.js"></script>
+    <script src="matter-tools.gui.js"></script>
     <link rel="stylesheet" href="main.css">
   </body>
   <body id="bottom">
     <script src="main.js"></script>
-      <br>
-    <p>Click and drag on an object to move it</p>
+    <button id="clear">Clear World</button>
     <br>
-    <button id="clear">Clear</button>
+    <input type="checkbox" name="keep">
+    <label for="keep">Keep On Screen</label>
     <br>
     <br>
-    <div id="spawner">
-      <h1 class="no-space">Spawner</h1>
-      <select name="shape" id="shape-choose">
-        <option value="rect">Rectangle</option>
-        <option value="circle">Circle</option>
-        <option value="poly">Polygon</option>
-        <option value="cloth">Cloth</option>
-        <option value="ragdoll">Ragdoll</option>
-      </select>
-      <br>
-      <select name="color" id="color-choose">
-        <option value="">Random Color</option>
-        <option value="red">Red</option>
-        <option value="green">Green</option>
-        <option value="blue">Blue</option>
-        <option value="yellow">Yellow</option>
-        <option value="purple">Purple</option>
-        <option value="orange">Orange</option>
-        <option value="white">White</option>
-        <option value="gray">Gray</option>
-        <option value="black">Black</option>
-      </select>
-      <br>
-      <input type="number" name="amount" id="amount" placeholder="Amount">
-      <br>
-      <input type="number" name="width" placeholder="Width" id="rect-width">
-      <input type="number" name="height" placeholder="Height" id="rect-height">
-      <input type="number" name="radius" placeholder="Radius" id="radius" hidden>
-      <input type="number" name="sides" placeholder="Sides" id="sides" hidden>
-      <br>
-      <button id="spawn">Spawn</button>
-      <button id="random">Random Values</button>
-      <br>
-      <h3 id="error" class="red no-space"></h2>
-    </div>
-    <br>
-    <div id="pointer">
-      <h1 class="no-space">Pointer</h1>
-      <h3 class="no-space">A pointer to show where an inputted coordinate is.</h3>
-      <br>
-      <input type="checkbox" name="pointer" id="pointer-check">
-      <label for="pointer-check" class="no-space">Enabled</label>
-      <br>
-      <input type="number" name="x" placeholder="X" id="x" class="show-buttons" disabled>
-      <input type="number" name="y" placeholder="Y" id="y" class="show-buttons" disabled>
-    </div>
-    <br>
-    <div id="finder">
-      <h1 class="no-space">Body Editor</h1>
-      <h3 class="no-space">Get a body by id and edit the properties of it.</h3>
-      <h3 class="no-space">Click on an object to get information or enter it's id.</h3>
-      <h3 class="no-space">Enable 'Show IDs' in settings to get the id of a body.</h3>
-      <br>
-      <input type="number" name="id" placeholder="Id">
-      <br>
-      <button name="find">Find</button>
-      <br>
-      <button type="button" class="collapsible">Show Information</button>
-      <div class="content" id="info">
-        <p>Waiting...</p>
+    <div id="sortable">
+      <div id="spawner" class="sort-child">
+        <h1 class="no-space">Spawner</h1>
+        <select name="shape" id="shape-choose">
+          <option value="rect">Rectangle</option>
+          <option value="circle">Circle</option>
+          <option value="poly">Polygon</option>
+          <option value="cloth">Cloth</option>
+          <option value="ragdoll">Ragdoll</option>
+        </select>
+        <br>
+        <select name="color" id="color-choose">
+          <option value="">Random Color</option>
+          <option value="red">Red</option>
+          <option value="green">Green</option>
+          <option value="blue">Blue</option>
+          <option value="yellow">Yellow</option>
+          <option value="purple">Purple</option>
+          <option value="orange">Orange</option>
+          <option value="white">White</option>
+          <option value="gray">Gray</option>
+          <option value="black">Black</option>
+        </select>
+        <br>
+        <input type="number" name="amount" id="amount" placeholder="Amount">
+        <br>
+        <input type="number" name="width" placeholder="Width" id="rect-width">
+        <input type="number" name="height" placeholder="Height" id="rect-height">
+        <input type="number" name="radius" placeholder="Radius" id="radius" hidden>
+        <input type="number" name="sides" placeholder="Sides" id="sides" hidden>
+        <br>
+        <button id="spawn">Spawn</button>
+        <button id="random">Random Values</button>
+        <br>
+        <h3 id="error" class="red no-space"></h2>
       </div>
-      <br>
-      <br>
-      <input type="text" placeholder="ID of body*" id="edit-id">
-      <br>
-      <input type="text" placeholder="Variable to edit*" id="edit-toedit">
-      <input type="number" placeholder="Index" id="edit-index">
-      <input type="text" placeholder="Sub Variable" id="edit-sub">
-      <br>
-      <input type="text" placeholder="New Value" id="edit-value">
-      <br>
-      <button id="edit-submit">Edit</button>
-      <div id="edit-prev"></div>
-      <p class="no-space faded">* = required</p>
-      <h3 id="edit-err" class="red no-space"></h3>
+      <div id="pointer" class="sort-child">
+        <h1 class="no-space">Pointer</h1>
+        <h3 class="no-space">A pointer to show where an inputted coordinate is.</h3>
+        <br>
+        <input type="checkbox" name="pointer" id="pointer-check">
+        <label for="pointer-check" class="no-space">Enabled</label>
+        <br>
+        <input type="number" name="x" placeholder="X" id="x" class="show-buttons" disabled>
+        <input type="number" name="y" placeholder="Y" id="y" class="show-buttons" disabled>
+      </div>
+      <div id="editor" class="sort-child">
+        <h1 class="no-space">Body Editor</h1>
+        <h3 class="no-space">Get a body by id and edit the properties of it.</h3>
+        <h3 class="no-space">Click on an object to get information or enter it's id.</h3>
+        <h3 class="no-space">Enable 'Show IDs' in settings to get the id of a body.</h3>
+        <br>
+        <input type="number" name="id" placeholder="Id">
+        <br>
+        <button name="find">Find</button>
+        <br>
+        <button type="button" class="collapsible">Show Information</button>
+        <div class="content" id="info" style="white-space: pre-wrap" contenteditable="true">Waiting...</div>
+        <br>
+        <br>
+        <button id="edit-submit">Edit</button>
+        <div id="edit-prev"></div>
+        <p class="no-space faded">* = required</p>
+        <h3 id="edit-err" class="red no-space"></h3>
+      </div>
+      <div id="settings" class="sort-child">
+        <h1 class="no-space">Settings</h1>
+        <button id="all">All</button>
+        <button id="none">None</button>
+        <br>
+        <input type="checkbox" name="wireframe">
+        <label for="wireframe">Wireframe</label>
+        <br>
+        <input type="checkbox" name="showDebug">
+        <label for="showDebug">Show Debug</label>
+        <br>
+        <input type="checkbox" name="showPositions">
+        <label for="showPositions">Show Positions</label>
+        <br>
+        <input type="checkbox" name="showBounds">
+        <label for="showBounds">Show Bounds</label>
+        <br>
+        <input type="checkbox" name="showVel">
+        <label for="showVel">Show Velocity</label>
+        <br>
+        <input type="checkbox" name="showColl">
+        <label for="showColl">Show Collisions</label>
+        <br>
+        <input type="checkbox" name="showAxes">
+        <label for="showAxes">Show Axes</label>
+        <br>
+        <input type="checkbox" name="showAngle">
+        <label for="showAngle">Show Angle Indicator</label>
+        <br>
+        <input type="checkbox" name="showIds">
+        <label for="showIds">Show IDs</label>
+        <br>
+        <input type="checkbox" name="showVert">
+        <label for="showVert">Show Vertex Numbers</label>
+        <br>
+        <input type="checkbox" name="showMouse">
+        <label for="showMouse">Show Mouse Contraint (Requires Clear)</label>
+      </div>
     </div>
-    <br>
-    <div id="settings">
-      <h1 class="no-space">Settings</h1>
-      <button id="all">All</button>
-      <button id="none">None</button>
-      <br>
-      <input type="checkbox" name="wireframe">
-      <label for="wireframe">Wireframe</label>
-      <br>
-      <input type="checkbox" name="showDebug">
-      <label for="showDebug">Show Debug</label>
-      <br>
-      <input type="checkbox" name="showPositions">
-      <label for="showPositions">Show Positions</label>
-      <br>
-      <input type="checkbox" name="showBounds">
-      <label for="showBounds">Show Bounds</label>
-      <br>
-      <input type="checkbox" name="showVel">
-      <label for="showVel">Show Velocity</label>
-      <br>
-      <input type="checkbox" name="showColl">
-      <label for="showColl">Show Collisions</label>
-      <br>
-      <input type="checkbox" name="showAxes">
-      <label for="showAxes">Show Axes</label>
-      <br>
-      <input type="checkbox" name="showAngle">
-      <label for="showAngle">Show Angle Indicator</label>
-      <br>
-      <input type="checkbox" name="showIds">
-      <label for="showIds">Show IDs</label>
-      <br>
-      <input type="checkbox" name="showVert">
-      <label for="showVert">Show Vertex Numbers</label>
-      <br>
-      <input type="checkbox" name="showMouse">
-      <label for="showMouse">Show Mouse Contraint (Requires Clear)</label>
-    </div>
+    
     <p>Made with <a href="https://github.com/liabru/matter-js" target="_blank">Matter.js</a></p>
+
     <script src="collapsible.js"></script>
+    <script>
+      $('[contenteditable=true]').keydown(function (e) {
+          e.stopImmediatePropagation();
+      });
+    </script>
   </body>
 </html>
