@@ -34,13 +34,13 @@
   </head>
   <body>
     <script src="matter.js"></script>
-    <script src="matter-tools.inspector.js"></script>
-    <script src="matter-tools.gui.js"></script>
+    <script src="matter-tools.js"></script>
     <link rel="stylesheet" href="main.css">
   </body>
   <body id="bottom">
     <script src="main.js"></script>
     <button id="clear">Clear World</button>
+    <button class="collapsible" name="show-inspector">Show Inspector</button>
     <br>
     <input type="checkbox" name="keep">
     <label for="keep">Keep On Screen</label>
@@ -102,11 +102,11 @@
         <br>
         <button name="find">Find</button>
         <br>
-        <button type="button" class="collapsible">Show Information</button>
-        <div class="content" id="info" style="white-space: pre-wrap" contenteditable="true">Waiting...</div>
+        <button type="button" class="collapsible" name="info">Show Information</button>
+        <div class="content" id="info" style="white-space: pre-wrap" contenteditable="true" name="infocontent">Waiting...</div>
         <br>
         <br>
-        <button id="edit-submit">Edit</button>
+        <button id="edit-submit">Save Edits</button>
         <div id="edit-prev"></div>
         <p class="no-space faded">* = required</p>
         <h3 id="edit-err" class="red no-space"></h3>
@@ -155,7 +155,7 @@
 
     <script src="collapsible.js"></script>
     <script>
-      $('[contenteditable=true]').keydown(function (e) {
+      $('textarea, input, [contenteditable=true]').keydown(function (e) {
           e.stopImmediatePropagation();
       });
     </script>

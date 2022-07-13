@@ -1,5 +1,6 @@
-var AllBodies = []
-let currentBody;
+var AllBodies = [];
+var SelectedBodies = [];
+let CurrentBody;
 
 window.addEventListener('load', function () {
     // spawner
@@ -280,12 +281,13 @@ window.addEventListener('load', function () {
 
     find.onclick = function() {
         info.innerHTML = GetBodyInformation(GetBodyFromID(id.value));
-        currentBody = GetBodyFromID(id.value);
+        CurrentBody = GetBodyFromID(id.value);
     }
 
     Events.on(mouseConstraint, "startdrag", function(event){
         info.innerHTML = GetBodyInformation(event.body);
-        currentBody = event.body;
+        CurrentBody = event.body;
+        MatterTools.Inspector.SetSelectedObjects(inspector, [event.body]);
     });
 
     editsubmit.onclick = function() {
@@ -305,33 +307,37 @@ window.addEventListener('load', function () {
             render.canvas.style.position = 'static';
         }
     }
+
+    $('.ins-container')[0].setAttribute("name", 'show-inspectorcontent');
+    $('.ins-container')[0].style.display = 'none';
+    console.log($('.ins-container'));
 });
 
 function SetBody(newvalue){
     var values = JSON.parse(newvalue);
 
-    const previousBody = JSON.parse(GetBodyInformation(currentBody));
+    const previousBody = JSON.parse(GetBodyInformation(CurrentBody));
 
     console.log(previousBody);
 
-    for (variable in currentBody){
+    for (variable in CurrentBody){
         console.log(variable);
         if (variable == 'parent' || variable == "parts") {
             console.log("continuing")
             continue;
         }
         if (variable == 'position') {
-            currentBody.position = currentBody.position;
+            CurrentBody.position = CurrentBody.position;
         }
         console.log(previousBody[variable] == values[variable])
         if (previousBody[variable] != values[variable]){
-            Body.set(currentBody, variable, values[variable]);
+            Body.set(CurrentBody, variable, values[variable]);
             console.log("setting " + variable + " to %O", values[variable]);
         }
     }
 
-    console.log(currentBody);
-    info.innerHTML = GetBodyInformation(currentBody);
+    console.log(CurrentBody);
+    info.innerHTML = GetBodyInformation(CurrentBody);
 }
 
 function GetBodyInformation(body){
@@ -375,7 +381,12 @@ function UpdateRenderSettings(wireframe, showDebug, showPositions, showBounds, s
 }
 
 function OnSelectInspector(selected){
+    SelectedBodies = selected;
 
+    if (SelectedBodies.length > 1){
+        info.innerHTML = "Multiple bodies selected";
+        return;
+    }
 }
 
 function getRandomInt(min, max) {
@@ -423,6 +434,7 @@ var render = Render.create({
 });
 
 var inspector = MatterTools.Inspector.create(engine, render, {})
+var serializer = MatterTools.Serializer.create();
 
 //                           xx, yy, columns, rows, columnGap, rowGap, callback
 var stack = Composites.stack(200, 320, 5, 5, 0, 0, function(x, y) {
@@ -474,7 +486,7 @@ Render.run(render);
 var runner = Runner.create();
 
 // run the engine
-Runner.run(runner, engine);
+Runner.run(runner, engine);  
 
 // console messages
 console.log("%cHey!", "color:red;font-size:50px")
@@ -815,4 +827,8 @@ function Help(){
     console.log("%cUpdateRenderSettings(wireframe, showDebug, showPositions, showBounds, showVel, showColl, showAxes, showAngle, showIds, showVert) : Void", "font-size:14px;background-color:rgb(0,0,0);border-radius:5px;padding:3px")
     console.log("%cGetBodyInformation(body) : String", "font-size:14px;background-color:rgb(0,0,0);border-radius:5px;padding:3px")
     console.log("%cFunctions that create bodies or composites must be added to the world using " + "%cComposite.add(world, body) : Void", "font-size:20px;color:red", "font-size:14px;background-color:rgb(0,0,0);border-radius:5px;padding:3px")
+}
+
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
 }
