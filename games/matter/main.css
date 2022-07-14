@@ -53,6 +53,23 @@ input[type='checkbox'] {
   font-size: 20px;
   outline: none;
 }
+input[type='file']{
+  width:290px !important;
+}
+input[type='file']::file-selector-button{
+  background-color: rgb(78, 78, 78);
+  color: white;
+  height:30px;
+  border: none;
+  border-radius: 5px;
+  font-size: 20px;
+  margin-bottom: 3px;
+  outline: none;
+  transition: background-color 0.1s ease-out;
+}
+input[type='file']:hover::file-selector-button{
+  background-color: rgb(71, 71, 71);
+}
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
   -webkit-appearance: none;

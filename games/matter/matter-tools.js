@@ -1727,38 +1727,29 @@ var _importFile = function(inspector) {
   var element = document.createElement('div'),
     fileInput;
 
-  element.innerHTML = '<input type="file">';
+  element.innerHTML = '<input type="file" accept=".txt, .json">';
   fileInput = element.firstChild;
 
   fileInput.addEventListener('change', function() {
     var file = fileInput.files[0];
 
-    if (file.name.match(/\.(txt|json)$/)) {
-      var reader = new FileReader();
+    var reader = new FileReader();
 
-      reader.onload = function() {
-        var importedComposite = inspector.serializer.parse(reader.result);
+    reader.onload = function() {
+      var importedComposite = inspector.serializer.parse(reader.result);
 
-        if (importedComposite) {
-          importedComposite.label = 'Imported Objects';
+      if (importedComposite) {
+        Composite.rebase(importedComposite);
+        OnImport(importedComposite);
 
-          Composite.rebase(importedComposite);
-          Composite.add(inspector.root, importedComposite);
+        // move imported composite to the start so that it appears top of tree
+        var worldTree = inspector.controls.worldTree.data('jstree'),
+          data = _generateCompositeTreeNode(inspector.root, null, true);
+        _updateTree(worldTree, data);
+      }
+    };
 
-          // move imported composite to the start so that it appears top of tree
-          inspector.root.composites.splice(inspector.root.composites.length - 1, 1);
-          inspector.root.composites.unshift(importedComposite);
-
-          var worldTree = inspector.controls.worldTree.data('jstree'),
-            data = _generateCompositeTreeNode(inspector.root, null, true);
-          _updateTree(worldTree, data);
-        }
-      };
-
-      reader.readAsText(file);  
-    } else {
-      alert('File not supported, .json or .txt JSON files only');
-    }
+    reader.readAsText(file);  
   });
 
   fileInput.click();

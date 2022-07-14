@@ -5,17 +5,13 @@ let CurrentBody;
 window.addEventListener('load', function () {
     // spawner
     var shapechooser = document.querySelector("#bottom select[name='shape']");
-    var rectwidth = document.querySelector("#bottom input[name='width']");
-    var rectheight = document.querySelector("#bottom input[name='height']");
-    var radius = document.querySelector("#bottom input[name='radius']");
-    var sides = document.querySelector("#bottom input[name='sides']");
     var submit = document.querySelector("#bottom #spawn");
     var random = document.querySelector("#bottom #random");
     var clear = document.querySelector("#bottom #clear");
     var amount = document.querySelector("#bottom input[name='amount']");
     var color = document.querySelector("#bottom select[name='color']");
-
     var error = document.querySelector("#bottom #error");
+    var file = document.querySelector("#bottom #image");
 
     // settings
     var wireframe = document.querySelector("#bottom input[name='wireframe']");
@@ -29,133 +25,136 @@ window.addEventListener('load', function () {
     var showIds = document.querySelector("#bottom input[name='showIds']");
     var showVert = document.querySelector("#bottom input[name='showVert']");
     var showMouse = document.querySelector("#bottom input[name='showMouse']");
-
-    var options = [wireframe, showDebug, showPositions, showBounds, showVel, showColl, showAxes, showAngle, showIds, showVert];
-
+    var allOptions = [wireframe, showDebug, showPositions, showBounds, showVel, showColl, showAxes, showAngle, showIds, showVert];
     var all = document.querySelector("#bottom #all");
     var none = document.querySelector("#bottom #none");
 
     // pointer
-    var pointerx = document.querySelector("#bottom #x");
-    var pointery = document.querySelector("#bottom #y");
+    var pointerx = document.querySelector("#bottom #X");
+    var pointery = document.querySelector("#bottom #Y");
     var pointerenabled = document.querySelector("#bottom #pointer-check");
 
     // body editor
     var id = document.querySelector("#bottom input[name='id']");
     var find = document.querySelector("#bottom button[name='find']");
     var info = document.querySelector("#bottom #info");
-    var toedit = document.querySelector("#bottom #edit-toedit");
     var editsubmit = document.querySelector("#bottom #edit-submit");
-    var editpreview = document.querySelector("#bottom #edit-prev");
-    var editid = document.querySelector("#bottom #edit-id");
-    var editerr = document.querySelector("#bottom #edit-err");
-    var editvalue = document.querySelector("#bottom #edit-value");
 
     var keep = document.querySelector("#bottom input[name='keep']");
+    var explode = document.querySelector("#bottom #explode");
 
+    InitiateSpawner(shapechooser, submit, random, error);
+    InitiateSettings(wireframe, showDebug, showPositions, showBounds, showVel, showColl, showAxes, showAngle, showIds, showVert, showMouse, allOptions, all, none, clear);
+    InitiatePointer(pointerx, pointery, pointerenabled);
+    InitiateEditor(id, find, info, editsubmit);
+    InitiateOther(keep, explode);
+});
+
+function InitiateSpawner(shapechooser, submit, random, error){
+    var elements = document.querySelectorAll("#bottom #selections *:not(br):not(option)");
+    
     shapechooser.onchange = function() {
-        if (shapechooser.value == 'rect'){
-            rectwidth.hidden = false;
-            rectheight.hidden = false;
-            radius.hidden = true;
-            sides.hidden = true;
-            amount.hidden = false;
-            color.hidden = false;
-        }
-        else if (shapechooser.value == 'circle'){
-            rectwidth.hidden = true;
-            rectheight.hidden = true;
-            radius.hidden = false;
-            sides.hidden = true;
-            amount.hidden = false;
-            color.hidden = false;
-        }
-        else if (shapechooser.value == 'poly'){
-            rectwidth.hidden = true;
-            rectheight.hidden = true;
-            radius.hidden = false;
-            sides.hidden = false;
-            amount.hidden = false;
-            color.hidden = false;
-        }
-        else if (shapechooser.value == 'cloth'){
-            rectwidth.hidden = true;
-            rectheight.hidden = true;
-            radius.hidden = true;
-            sides.hidden = true;
-            amount.hidden = true;
-            color.hidden = true;
-        }
-        else if (shapechooser.value == 'ragdoll'){
-            rectwidth.hidden = true;
-            rectheight.hidden = true;
-            radius.hidden = true;
-            sides.hidden = true;
-            amount.hidden = true;
-            color.hidden = true;
+        var shape = shapechooser.value;
+
+        for (var i = 0; i < elements.length; i++) {
+            var element = elements[i];
+
+            if (element.getAttribute("name").includes(shape + "-sel")){
+                element.hidden = false;
+            } else {
+                element.hidden = true;
+            }
         }
     };
 
     submit.onclick = function() {
         var shapes = [];
 
+        var shape = shapechooser.value;
+        var amount = document.querySelector("#bottom #selections #amount").value
+        var x = document.querySelector("#bottom #selections #x").value;
+        var y = document.querySelector("#bottom #selections #y").value;
+        var rectwidth = document.querySelector("#bottom #selections #rectwidth").value;
+        var rectheight = document.querySelector("#bottom #selections #rectheight").value;
+        var radius = document.querySelector("#bottom #selections #radius").value;
+        var sides = document.querySelector("#bottom #selections #sides").value;
+        var color = document.querySelector("#bottom #selections #color").value;
+        var file = document.querySelector("#bottom #selections #file").value;
+
         var current_amount = 0;
-        if (amount.value <= 0) current_amount = 1;
-        else current_amount = amount.value;
+        if (amount <= 0) current_amount = 1;
+        else current_amount = amount;
 
-        if (shapechooser.value == 'rect'){
-            if (rectwidth.value == '' || rectheight.value == ''){
-                error.innerHTML = "Please enter a width and height!";
-                return;
-            } else if (rectwidth.value <= 0 || rectheight.value <= 0){
-                error.innerHTML = "Width and height must be above 0!";
-                return;
-            }
-            
-            for (var i = 0; i < current_amount; i++) {
-                shapes.push(Bodies.rectangle(387, 287, rectwidth.value, rectheight.value, {render: {fillStyle: color.value}}));
-            }
-        }
-        else if (shapechooser.value == 'circle'){
-            if (radius.value == ''){
-                error.innerHTML = "Please enter a radius!";
-                return;
-            } else if (radius.value <= 0){
-                error.innerHTML = "Radius must be above 0!";
-                return;
-            }
+        for (var i = 0; i < current_amount; i++) {
+            if (shape == 'rect'){
+                if (rectwidth == '' || rectheight == ''){
+                    rectwidth = rectwidth == '' ? 40 : rectwidth;
+                    rectheight = rectheight == '' ? 40 : rectheight;
+                    return;
+                } else if (rectwidth <= 0 || rectheight <= 0){
+                    error.innerHTML = "Width and height must be above 0!";
+                    return;
+                }
 
-            for (var i = 0; i < current_amount; i++) {
-                shapes.push(Bodies.circle(387, 287, radius.value, {render: {fillStyle: color.value}}));
+                shapes.push(Bodies.rectangle(400, 300, rectwidth, rectheight, {render: {fillStyle: color.value}}));
             }
-        }
-        else if (shapechooser.value == 'poly'){
-            if (sides.value == '' || radius.value == ''){
-                error.innerHTML = "Please enter a radius and number of sides!";
-                return;
-            } else if (sides.value < 3){
-                error.innerHTML = "Please enter at least 3 sides!";
-                return;
-            } else if (radius.value <= 0){
-                error.innerHTML = "Radius must be above 0!";
-                return;
+            else if (shape == 'circle'){
+                if (radius == ''){
+                    radius = 40;
+                    return;
+                } else if (radius <= 0){
+                    error.innerHTML = "Radius must be above 0!";
+                    return;
+                }
+
+                shapes.push(Bodies.circle(400, 300, radius, {render: {fillStyle: color.value}}));
             }
+            else if (shape == 'poly'){
+                if (sides == '' || radius == ''){
+                    sides = sides == '' ? 5 : sides;
+                    radius = radius == '' ? 40 : radius;
+                    return;
+                } else if (sides < 3){
+                    error.innerHTML = "Please enter at least 3 sides!";
+                    return;
+                } else if (radius <= 0){
+                    error.innerHTML = "Radius must be above 0!";
+                    return;
+                }
 
-            for (var i = 0; i < current_amount; i++) {
-                shapes.push(Bodies.polygon(387, 287, sides.value, radius.value, {render: {fillStyle: color.value}}));
+                shapes.push(Bodies.polygon(400, 300, sides, radius, {render: {fillStyle: color.value}}));
+            } else if (shape == 'cloth'){
+                var cloth = Cloth(200, 200, 20, 12, 5, 5, false, 8);
+
+                for (var i = 0; i < 20; i++) {
+                    cloth.bodies[i].isStatic = true;
+                }
+
+                shapes.push(cloth);
+            } else if (shape == 'ragdoll'){
+                var ragdoll = Ragdoll(400, 300, 0.7);
+
+                shapes.push(ragdoll);
+            } else if (shape == 'stack'){
+
+            } else if (shape == 'image'){
+                if (file.value == ''){
+                    error.innerHTML = "Please enter an image!";
+                    return;
+                }
+
+                var reader = new FileReader();
+
+                reader.onloadend = function(e){
+                    console.log(reader.result);
+                    var body = Bodies.rectangle(400, 300, file.files[0].width, file.files[0].height, {render: {fillStyle: color.value, sprite: {texture: reader.result}}});
+                    shapes.push(body);
+                }
+
+                reader.readAsDataURL(file.files[0]);
+            } else {
+                console.log("what the fuck");
             }
-        } else if (shapechooser.value == 'cloth'){
-            var cloth = Cloth(200, 200, 20, 12, 5, 5, false, 8);
-
-            for (var i = 0; i < 20; i++) {
-                cloth.bodies[i].isStatic = true;
-            }
-
-            shapes.push(cloth);
-        } else if (shapechooser.value == 'ragdoll'){
-            var ragdoll = Ragdoll(387, 287, 0.7);
-
-            shapes.push(ragdoll);
         }
 
         Composite.add(engine.world, shapes);
@@ -169,22 +168,22 @@ window.addEventListener('load', function () {
         var shapes = [];
 
         var current_amount = 0;
-        if (amount.value <= 0) current_amount = 1;
-        else current_amount = amount.value;
+        if (amount <= 0) current_amount = 1;
+        else current_amount = amount;
 
-        if (shapechooser.value == 'rect'){
+        if (shape == 'rect'){
             for (var i = 0; i < current_amount; i++) {
-                shapes.push(Bodies.rectangle(387, 287, getRandomInt(20, 130), getRandomInt(20, 130), {render: {fillStyle: color.value}}));
+                shapes.push(Bodies.rectangle(400, 300, getRandomInt(20, 130), getRandomInt(20, 130), {render: {fillStyle: color.value}}));
             }
         }
-        else if (shapechooser.value == 'circle'){
+        else if (shape == 'circle'){
             for (var i = 0; i < current_amount; i++) {
-                shapes.push(Bodies.circle(387, 287, getRandomInt(20, 50), {render: {fillStyle: color.value}}));
+                shapes.push(Bodies.circle(400, 300, getRandomInt(20, 50), {render: {fillStyle: color.value}}));
             }
         }
-        else if (shapechooser.value == 'poly'){
+        else if (shape == 'poly'){
             for (var i = 0; i < current_amount; i++) {
-                shapes.push(Bodies.polygon(387, 287, getRandomInt(3, 10), getRandomInt(20, 50), {render: {fillStyle: color.value}}));
+                shapes.push(Bodies.polygon(400, 300, getRandomInt(3, 10), getRandomInt(20, 50), {render: {fillStyle: color.value}}));
             }
         }
 
@@ -193,23 +192,9 @@ window.addEventListener('load', function () {
             AllBodies.push(shapes[i]);
         }
     };
+}
 
-    clear.onclick = function() {
-        Composite.clear(engine.world, true);
-
-        var mouseConstraint = MouseConstraint.create(engine, {
-            mouse: mouse,
-            constraint: {
-                stiffness: 0.1,
-                render: {
-                    visible: showMouse.checked
-                }
-            }
-        });
-        
-        Composite.add(world, mouseConstraint);
-    };
-
+function InitiateSettings(wireframe, showDebug, showPositions, showBounds, showVel, showColl, showAxes, showAngle, showIds, showVert, showMouse, allOptions, all, none){
     // thank you copilot, give yourself a pat on the back
     wireframe.onchange = function() {
         render.options.wireframes = wireframe.checked;
@@ -246,19 +231,37 @@ window.addEventListener('load', function () {
     }
 
     all.onclick = function() {
-        for (var i = 0; i < options.length; i++){
-            options[i].checked = true;
+        for (var i = 0; i < allOptions.length; i++){
+            allOptions[i].checked = true;
         }
         UpdateRenderSettings(wireframe, showDebug, showPositions, showBounds, showVel, showColl, showAxes, showAngle, showIds, showVert);
     };
 
     none.onclick = function() {
-        for (var i = 0; i < options.length; i++){
-            options[i].checked = false;
+        for (var i = 0; i < allOptions.length; i++){
+            allOptions[i].checked = false;
         }
         UpdateRenderSettings(wireframe, showDebug, showPositions, showBounds, showVel, showColl, showAxes, showAngle, showIds, showVert);
     }
 
+    clear.onclick = function() {
+        Composite.clear(engine.world, true);
+
+        var mouseConstraint = MouseConstraint.create(engine, {
+            mouse: mouse,
+            constraint: {
+                stiffness: 0.1,
+                render: {
+                    visible: showMouse.checked
+                }
+            }
+        });
+        
+        Composite.add(world, mouseConstraint);
+    };
+}
+
+function InitiatePointer(pointerx, pointery, pointerenabled){
     pointerenabled.onchange = function() {
         if (!pointerenabled.checked) {
             pointerx.disabled = true;
@@ -278,7 +281,9 @@ window.addEventListener('load', function () {
     pointery.onchange = function() {
         Body.setPosition(pointer, Vector.create(pointerx.value, pointery.value));
     }
+}
 
+function InitiateEditor(id, find, info, editsubmit){
     find.onclick = function() {
         info.innerHTML = GetBodyInformation(GetBodyFromID(id.value));
         CurrentBody = GetBodyFromID(id.value);
@@ -293,7 +298,9 @@ window.addEventListener('load', function () {
     editsubmit.onclick = function() {
         SetBody(info.innerHTML);
     }
+}
 
+function InitiateOther(keep, explode){
     window.addEventListener('resize', function() {
         render.canvas.width = document.documentElement.clientWidth - 35;
         Body.setPosition(wallR, Vector.create(document.documentElement.clientWidth - 35 + 45, 300))
@@ -308,35 +315,61 @@ window.addEventListener('load', function () {
         }
     }
 
+    explode.onclick = function(){
+        if (SelectedBodies.length > 0) {
+            Explosion(engine, SelectedBodies, true, true);
+        }
+        else {
+            Explosion(engine, Composite.allBodies(engine.world), false, false);
+        }
+    }
+
     $('.ins-container')[0].setAttribute("name", 'show-inspectorcontent');
     $('.ins-container')[0].style.display = 'none';
-    console.log($('.ins-container'));
-});
+}
+
+
+
+
+
+function Explosion(engine, bodies, dataList, bypassStatic) {
+    for (let i = 0; i < bodies.length; ++i) {
+        var body;
+        if (dataList) body = bodies[i].data;
+        else body = bodies[i];
+
+        if (!body.isStatic || bypassStatic) {
+            if (bypassStatic) Body.setStatic(body, false);
+
+            const forceMagnitude = 0.025 * body.mass;
+
+            Body.applyForce(body, body.position, {
+                x:
+                (forceMagnitude + Common.random() * forceMagnitude) *
+                Common.choose([1, -1]),
+                y: -forceMagnitude + Common.random() * -forceMagnitude
+            });
+        }
+    }
+}
 
 function SetBody(newvalue){
     var values = JSON.parse(newvalue);
 
     const previousBody = JSON.parse(GetBodyInformation(CurrentBody));
 
-    console.log(previousBody);
-
     for (variable in CurrentBody){
-        console.log(variable);
         if (variable == 'parent' || variable == "parts") {
-            console.log("continuing")
             continue;
         }
         if (variable == 'position') {
             CurrentBody.position = CurrentBody.position;
         }
-        console.log(previousBody[variable] == values[variable])
         if (previousBody[variable] != values[variable]){
             Body.set(CurrentBody, variable, values[variable]);
-            console.log("setting " + variable + " to %O", values[variable]);
         }
     }
 
-    console.log(CurrentBody);
     info.innerHTML = GetBodyInformation(CurrentBody);
 }
 
@@ -353,19 +386,19 @@ function CheckBodyVariable(body, variable){
 JSON.safeStringify = (obj, indent = 2) => {
     let cache = [];
     const retVal = JSON.stringify(
-      obj,
-      (key, value) =>
+        obj,
+        (key, value) =>
         typeof value === "object" && value !== null
-          ? cache.includes(value)
+            ? cache.includes(value)
             ? undefined // Duplicate reference found, discard key
             : cache.push(value) && value // Store value in our collection
-          : value,
-      indent
+            : value,
+        indent
     );
     cache = null;
 
     return retVal;
-  };
+};
 
 function UpdateRenderSettings(wireframe, showDebug, showPositions, showBounds, showVel, showColl, showAxes, showAngle, showIds, showVert) {
     render.options.wireframes = wireframe.checked;
@@ -387,6 +420,10 @@ function OnSelectInspector(selected){
         info.innerHTML = "Multiple bodies selected";
         return;
     }
+}
+
+function OnImport(composite){
+    Composite.add(engine.world, composite);
 }
 
 function getRandomInt(min, max) {

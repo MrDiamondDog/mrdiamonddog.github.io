@@ -41,6 +41,7 @@
     <script src="main.js"></script>
     <button id="clear">Clear World</button>
     <button class="collapsible" name="show-inspector">Show Inspector</button>
+    <button id="explode">Explosion</button>
     <br>
     <input type="checkbox" name="keep">
     <label for="keep">Keep On Screen</label>
@@ -55,27 +56,35 @@
           <option value="poly">Polygon</option>
           <option value="cloth">Cloth</option>
           <option value="ragdoll">Ragdoll</option>
+          <option value="stack">Stack</option>
+          <option value="image">Image</option>
         </select>
         <br>
-        <select name="color" id="color-choose">
-          <option value="">Random Color</option>
-          <option value="red">Red</option>
-          <option value="green">Green</option>
-          <option value="blue">Blue</option>
-          <option value="yellow">Yellow</option>
-          <option value="purple">Purple</option>
-          <option value="orange">Orange</option>
-          <option value="white">White</option>
-          <option value="gray">Gray</option>
-          <option value="black">Black</option>
-        </select>
-        <br>
-        <input type="number" name="amount" id="amount" placeholder="Amount">
-        <br>
-        <input type="number" name="width" placeholder="Width" id="rect-width">
-        <input type="number" name="height" placeholder="Height" id="rect-height">
-        <input type="number" name="radius" placeholder="Radius" id="radius" hidden>
-        <input type="number" name="sides" placeholder="Sides" id="sides" hidden>
+        <div id="selections">
+          <select name="rect-sel circle-sel poly-sel" id="color">
+            <option value="">Random Color</option>
+            <option value="red">Red</option>
+            <option value="green">Green</option>
+            <option value="blue">Blue</option>
+            <option value="yellow">Yellow</option>
+            <option value="purple">Purple</option>
+            <option value="orange">Orange</option>
+            <option value="white">White</option>
+            <option value="gray">Gray</option>
+            <option value="black">Black</option>
+          </select>
+          <br>
+          <input type="number" name="rect-sel circle-sel poly-sel image-sel ragdoll-sel" placeholder="Amount" id="amount">
+          <br>
+          <input type="number" name="rect-sel circle-sel poly-sel image-sel cloth-sel ragdoll-sel stack-sel" placeholder="X (400)" id="x">
+          <input type="number" name="rect-sel circle-sel poly-sel image-sel cloth-sel ragdoll-sel stack-sel" placeholder="Y (300)" id="y">
+          <br>
+          <input type="number" name="rect-sel" placeholder="Width" id="rectwidth">
+          <input type="number" name="rect-sel" placeholder="Height" id="rectheight">
+          <input type="number" name="circle-sel poly-sel" placeholder="Radius" id="radius" hidden>
+          <input type="number" name="poly-sel" placeholder="Sides" id="sides" hidden>
+          <input type="file" name="image-sel" accept="image/*" id="file" hidden>
+        </div>
         <br>
         <button id="spawn">Spawn</button>
         <button id="random">Random Values</button>
@@ -89,8 +98,8 @@
         <input type="checkbox" name="pointer" id="pointer-check">
         <label for="pointer-check" class="no-space">Enabled</label>
         <br>
-        <input type="number" name="x" placeholder="X" id="x" class="show-buttons" disabled>
-        <input type="number" name="y" placeholder="Y" id="y" class="show-buttons" disabled>
+        <input type="number" name="x" placeholder="X" id="X" class="show-buttons" disabled>
+        <input type="number" name="y" placeholder="Y" id="Y" class="show-buttons" disabled>
       </div>
       <div id="editor" class="sort-child">
         <h1 class="no-space">Body Editor</h1>
@@ -103,7 +112,7 @@
         <button name="find">Find</button>
         <br>
         <button type="button" class="collapsible" name="info">Show Information</button>
-        <div class="content" id="info" style="white-space: pre-wrap" contenteditable="true" name="infocontent">Waiting...</div>
+        <div class="content" id="info" style="white-space: pre-wrap" contenteditable="true" name="infocontent" spellcheck="false">Waiting...</div>
         <br>
         <br>
         <button id="edit-submit">Save Edits</button>
@@ -146,7 +155,7 @@
         <input type="checkbox" name="showVert">
         <label for="showVert">Show Vertex Numbers</label>
         <br>
-        <input type="checkbox" name="showMouse">
+        <input type="checkbox" name="showMouse" checked="true">
         <label for="showMouse">Show Mouse Contraint (Requires Clear)</label>
       </div>
     </div>
