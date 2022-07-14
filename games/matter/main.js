@@ -356,13 +356,6 @@ function InitiateOther(keep, explode){
 function InitiatePrefabs(prefabContainer, i, prefabs, deleteButton = false){
     var prefab = prefabs[i];
     var prefabButton = document.createElement('button');
-    var deleteIcon = document.createElement('span');
-    deleteIcon.innerHTML = "delete"
-    deleteIcon.style.color = "red"; 
-    deleteIcon.style.position = "absolute";
-    deleteIcon.style.cursor = "pointer";
-    deleteIcon.style.fontSize = "27px";
-    deleteIcon.classList.add("material-symbols-outlined");
     
     prefabButton.innerHTML = prefab.name;
     prefabButton.onclick = function(){
@@ -370,6 +363,14 @@ function InitiatePrefabs(prefabContainer, i, prefabs, deleteButton = false){
     }
     prefabContainer.appendChild(prefabButton);
     if (deleteButton) {
+        var deleteIcon = document.createElement('span');
+        deleteIcon.innerHTML = "delete"
+        deleteIcon.style.color = "red"; 
+        deleteIcon.style.position = "absolute";
+        deleteIcon.style.cursor = "pointer";
+        deleteIcon.style.fontSize = "27px";
+        deleteIcon.classList.add("material-symbols-outlined");
+
         deleteIcon.onclick = function(){
             if (!confirm("Are you sure you want to delete " + prefab.name + "?")) return;
             var index = i;
@@ -379,7 +380,30 @@ function InitiatePrefabs(prefabContainer, i, prefabs, deleteButton = false){
             location.reload();
         }
 
-        prefabContainer.appendChild(deleteIcon)
+        var exportIcon = document.createElement('span');
+        exportIcon.innerHTML = "open_in_new";
+        exportIcon.style.position = "absolute";
+        exportIcon.style.cursor = "pointer";
+        exportIcon.style.fontSize = "27px";
+        exportIcon.style.marginLeft = "28px";
+        exportIcon.classList.add("material-symbols-outlined");
+
+        exportIcon.onclick = function(){
+            var index = i
+            var userPrefabs = JSON.parse(localStorage.getItem('userPrefabs'));
+
+            var data = userPrefabs[index];
+
+            var blob = new Blob([data.data], { type: 'application/json' }),
+            anchor = document.createElement('a');
+            anchor.download = data.name;
+            anchor.href = (window.webkitURL || window.URL).createObjectURL(blob);
+            anchor.dataset.downloadurl = ['application/json', anchor.download, anchor.href].join(':');
+            anchor.click();
+        }
+
+        prefabContainer.appendChild(deleteIcon);
+        prefabContainer.appendChild(exportIcon);
     }
     prefabContainer.appendChild(document.createElement('br'));
 }
