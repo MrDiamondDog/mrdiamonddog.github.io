@@ -48,6 +48,10 @@ window.addEventListener('load', function () {
     InitiatePointer(pointerx, pointery, pointerenabled);
     InitiateEditor(id, find, info, editsubmit);
     InitiateOther(keep, explode);
+
+    for (var i = 0; i < Prefabs.length; i++) {
+        InitiatePrefabs(document.getElementById('prefabs'), i);
+    }
 });
 
 function InitiateSpawner(shapechooser, submit, random, error){
@@ -76,6 +80,8 @@ function InitiateSpawner(shapechooser, submit, random, error){
         var y = document.querySelector("#bottom #selections #y").value;
         var rectwidth = document.querySelector("#bottom #selections #rectwidth").value;
         var rectheight = document.querySelector("#bottom #selections #rectheight").value;
+        var rows = document.querySelector("#bottom #selections #rows").value;
+        var columns = document.querySelector("#bottom #selections #columns").value;
         var radius = document.querySelector("#bottom #selections #radius").value;
         var sides = document.querySelector("#bottom #selections #sides").value;
         var color = document.querySelector("#bottom #selections #color").value;
@@ -84,6 +90,12 @@ function InitiateSpawner(shapechooser, submit, random, error){
         var current_amount = 0;
         if (amount <= 0) current_amount = 1;
         else current_amount = amount;
+
+        var xx, yy;
+        if (x == '') xx = 400;
+        else xx = parseInt(x);
+        if (y == '') yy = 300;
+        else yy = parseInt(y);
 
         for (var i = 0; i < current_amount; i++) {
             if (shape == 'rect'){
@@ -96,7 +108,7 @@ function InitiateSpawner(shapechooser, submit, random, error){
                     return;
                 }
 
-                shapes.push(Bodies.rectangle(400, 300, rectwidth, rectheight, {render: {fillStyle: color.value}}));
+                shapes.push(Bodies.rectangle(xx, yy, rectwidth, rectheight, {render: {fillStyle: color.value}}));
             }
             else if (shape == 'circle'){
                 if (radius == ''){
@@ -107,7 +119,7 @@ function InitiateSpawner(shapechooser, submit, random, error){
                     return;
                 }
 
-                shapes.push(Bodies.circle(400, 300, radius, {render: {fillStyle: color.value}}));
+                shapes.push(Bodies.circle(xx, yy, radius, {render: {fillStyle: color.value}}));
             }
             else if (shape == 'poly'){
                 if (sides == '' || radius == ''){
@@ -122,9 +134,9 @@ function InitiateSpawner(shapechooser, submit, random, error){
                     return;
                 }
 
-                shapes.push(Bodies.polygon(400, 300, sides, radius, {render: {fillStyle: color.value}}));
+                shapes.push(Bodies.polygon(xx, yy, sides, radius, {render: {fillStyle: color.value}}));
             } else if (shape == 'cloth'){
-                var cloth = Cloth(200, 200, 20, 12, 5, 5, false, 8);
+                var cloth = Cloth(xx, yy, 20, 12, 5, 5, false, 8);
 
                 for (var i = 0; i < 20; i++) {
                     cloth.bodies[i].isStatic = true;
@@ -132,11 +144,15 @@ function InitiateSpawner(shapechooser, submit, random, error){
 
                 shapes.push(cloth);
             } else if (shape == 'ragdoll'){
-                var ragdoll = Ragdoll(400, 300, 0.7);
+                var ragdoll = Ragdoll(xx, yy, 0.7);
 
                 shapes.push(ragdoll);
             } else if (shape == 'stack'){
+                var stack = Composites.stack(xx, yy, columns, rows, 0, 0, function(x, y) {
+                    return Bodies.rectangle(x, y, rectwidth, rectheight, {render: {fillStyle: color}});
+                });
 
+                shapes.push(stack);
             } else if (shape == 'image'){
                 if (file.value == ''){
                     error.innerHTML = "Please enter an image!";
@@ -147,13 +163,11 @@ function InitiateSpawner(shapechooser, submit, random, error){
 
                 reader.onloadend = function(e){
                     console.log(reader.result);
-                    var body = Bodies.rectangle(400, 300, file.files[0].width, file.files[0].height, {render: {fillStyle: color.value, sprite: {texture: reader.result}}});
+                    var body = Bodies.rectangle(xx, yy, file.files[0].width, file.files[0].height, {render: {fillStyle: color.value, sprite: {texture: reader.result}}});
                     shapes.push(body);
                 }
 
                 reader.readAsDataURL(file.files[0]);
-            } else {
-                console.log("what the fuck");
             }
         }
 
@@ -281,6 +295,14 @@ function InitiatePointer(pointerx, pointery, pointerenabled){
     pointery.onchange = function() {
         Body.setPosition(pointer, Vector.create(pointerx.value, pointery.value));
     }
+
+    Events.on(mouseConstraint, "mousedown", function(event){
+        if (pointerenabled.checked) {
+            pointerx.value = event.mouse.position.x;
+            pointery.value = event.mouse.position.y;
+            Body.setPosition(pointer, Vector.create(pointerx.value, pointery.value));
+        }
+    });
 }
 
 function InitiateEditor(id, find, info, editsubmit){
@@ -302,8 +324,8 @@ function InitiateEditor(id, find, info, editsubmit){
 
 function InitiateOther(keep, explode){
     window.addEventListener('resize', function() {
-        render.canvas.width = document.documentElement.clientWidth - 35;
-        Body.setPosition(wallR, Vector.create(document.documentElement.clientWidth - 35 + 45, 300))
+        render.canvas.width = document.documentElement.clientWidth + 35;
+        Body.setPosition(wallR, Vector.create(document.documentElement.clientWidth + 52, 300))
     });
 
     keep.onchange = function() {
@@ -327,6 +349,19 @@ function InitiateOther(keep, explode){
     $('.ins-container')[0].setAttribute("name", 'show-inspectorcontent');
     $('.ins-container')[0].style.display = 'none';
 }
+
+function InitiatePrefabs(prefabs, i){
+    var prefab = Prefabs[i];
+    var prefabButton = document.createElement('button');
+    prefabButton.innerHTML = prefab.name;
+    prefabButton.onclick = function(){
+        MatterTools.Inspector.importCompositeFromString(inspector, prefab.data);
+    }
+    prefabs.appendChild(prefabButton);
+    prefabs.appendChild(document.createElement('br'));
+}
+
+
 
 
 
@@ -464,11 +499,14 @@ var render = Render.create({
     element: document.body,
     engine: engine,
     options: {
-        width: document.documentElement.clientWidth - 35,
-        height: 525,
+        width: document.documentElement.clientWidth,
+        height: 700,
         wireframes: false,
     }
 });
+
+render.canvas.style.margin = '-12px';
+render.canvas.style.marginBottom = '0px';
 
 var inspector = MatterTools.Inspector.create(engine, render, {})
 var serializer = MatterTools.Serializer.create();
@@ -485,10 +523,10 @@ pointer.collisionFilter = {
     'mask': 0,
 };
 
-var ground = Bodies.rectangle(400, 550 + 20, document.documentElement.clientWidth + 5000, 100, { isStatic: true, render: {fillStyle: 'gray'} });
-var wallL = Bodies.rectangle(-45, 300, 100, 600, { isStatic: true, render: {fillStyle: 'gray'}  });
-var wallR = Bodies.rectangle(document.documentElement.clientWidth - 35 + 45, 300, 100, 600, { isStatic: true, render: {fillStyle: 'gray'}  });
-var ceiling = Bodies.rectangle(400, -45, document.documentElement.clientWidth + 5000, 100, { isStatic: true, render: {fillStyle: 'gray'}  });
+var ground = Bodies.rectangle(400, 700 + 49, document.documentElement.clientWidth + 5000, 100, { isStatic: true, render: {fillStyle: '#454545'}, label: 'ground' });
+var wallL = Bodies.rectangle(-45, 300, 100, 1000, { isStatic: true, render: {fillStyle: '#14151f'}, label: 'wallL' });
+var wallR = Bodies.rectangle(document.documentElement.clientWidth + 35, 300, 100, 1000, { isStatic: true, render: {fillStyle: '#14151f'}, label: 'wallR' });
+var ceiling = Bodies.rectangle(400, -43, document.documentElement.clientWidth + 5000, 100, { isStatic: true, render: {fillStyle: '#14151f'}, label: 'ceiling' });
 
 // add all of the bodies to the world
 Composite.add(engine.world, [pointer, stack, ground, wallL, wallR, ceiling]);

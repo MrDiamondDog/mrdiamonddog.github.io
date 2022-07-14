@@ -1534,6 +1534,10 @@ var _updateTree = function(tree, data) {
   tree.refresh(-1);
 };
 
+Inspector.updateTree = function(inspector, data) {
+  _updateTree(inspector.controls.worldTree, data);
+}
+
 var _generateCompositeTreeNode = function(composite, compositeId, isRoot) {
   var children = [],
     node = {
@@ -1566,6 +1570,10 @@ var _generateCompositeTreeNode = function(composite, compositeId, isRoot) {
   node.children = children;
 
   return node;
+};
+
+Inspector.generateCompositeTreeNode = function(composite, compositeId, isRoot) {
+  return _generateCompositeTreeNode(composite, compositeId, isRoot);
 };
 
 var _generateCompositesTreeNode = function(composites, compositeId) {
@@ -1753,6 +1761,20 @@ var _importFile = function(inspector) {
   });
 
   fileInput.click();
+};
+
+Inspector.importCompositeFromString = function(inspector, str){
+  var importedComposite = inspector.serializer.parse(str);
+
+  if (importedComposite) {
+    Composite.rebase(importedComposite);
+    OnImport(importedComposite);
+
+    // move imported composite to the start so that it appears top of tree
+    var worldTree = inspector.controls.worldTree.data('jstree'),
+      data = _generateCompositeTreeNode(inspector.root, null, true);
+    _updateTree(worldTree, data);
+  }
 };
 
 /*

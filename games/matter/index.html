@@ -1,16 +1,11 @@
 <!--
-  Hey, what are you doing here?
-  Look, I don't care what you look at here.
-  Don't judge. This code sucks.
+  You should leave.
+  Or don't.
+  We don't care.
 
-  I didn't use the inline 'onclick' or anything
-  because it would not work. I'm not going to worry
-  about it anymore. 
+  [AS]
 
-  If you find anything that you think is wrong or a bug,
-  make a bug report on the GitHub repo. Or show me something cool,
-  or give me a suggestion. Please.
-  https://github.com/MrDiamondDog/mrdiamonddog.github.io/issues/new
+  https://github.com/mrdiamonddog/mrdiamonddog.github.io
 -->
 
 <!DOCTYPE html>
@@ -39,6 +34,7 @@
   </body>
   <body id="bottom">
     <script src="main.js"></script>
+    <script src="prefabs.js"></script>
     <button id="clear">Clear World</button>
     <button class="collapsible" name="show-inspector">Show Inspector</button>
     <button id="explode">Explosion</button>
@@ -61,7 +57,7 @@
         </select>
         <br>
         <div id="selections">
-          <select name="rect-sel circle-sel poly-sel" id="color">
+          <select name="rect-sel circle-sel poly-sel stack-sel" id="color">
             <option value="">Random Color</option>
             <option value="red">Red</option>
             <option value="green">Green</option>
@@ -79,8 +75,10 @@
           <input type="number" name="rect-sel circle-sel poly-sel image-sel cloth-sel ragdoll-sel stack-sel" placeholder="X (400)" id="x">
           <input type="number" name="rect-sel circle-sel poly-sel image-sel cloth-sel ragdoll-sel stack-sel" placeholder="Y (300)" id="y">
           <br>
-          <input type="number" name="rect-sel" placeholder="Width" id="rectwidth">
-          <input type="number" name="rect-sel" placeholder="Height" id="rectheight">
+          <input type="number" name="rect-sel stack-sel" placeholder="Width" id="rectwidth">
+          <input type="number" name="rect-sel stack-sel" placeholder="Height" id="rectheight">
+          <input type="number" name="stack-sel" placeholder="Rows" id="rows" hidden>
+          <input type="number" name="stack-sel" placeholder="Columns" id="columns" hidden>
           <input type="number" name="circle-sel poly-sel" placeholder="Radius" id="radius" hidden>
           <input type="number" name="poly-sel" placeholder="Sides" id="sides" hidden>
           <input type="file" name="image-sel" accept="image/*" id="file" hidden>
@@ -94,6 +92,7 @@
       <div id="pointer" class="sort-child">
         <h1 class="no-space">Pointer</h1>
         <h3 class="no-space">A pointer to show where an inputted coordinate is.</h3>
+        <h3 class="no-space">If enabled, it will also go to the cursor's position when you click.</h3>
         <br>
         <input type="checkbox" name="pointer" id="pointer-check">
         <label for="pointer-check" class="no-space">Enabled</label>
@@ -119,6 +118,12 @@
         <div id="edit-prev"></div>
         <p class="no-space faded">* = required</p>
         <h3 id="edit-err" class="red no-space"></h3>
+      </div>
+      <div id="prefabs" class="sort-child">
+        <h1 class="no-space">Prefabs</h1>
+        <h3 class="no-space">Prefabs are preset bodies that you can spawn in.</h3>
+        <h3 class="no-space">Click on a prefab to spawn it.</h3>
+        <br>
       </div>
       <div id="settings" class="sort-child">
         <h1 class="no-space">Settings</h1>
@@ -160,7 +165,8 @@
       </div>
     </div>
     
-    <p>Made with <a href="https://github.com/liabru/matter-js" target="_blank">Matter.js</a></p>
+    <p class="no-space" >Made with <a href="https://github.com/liabru/matter-js" target="_blank">Matter.js</a> ▲ ● ■</p>
+    <p class="no-space"><a href="https://github.com/mrdiamonddog/mrdiamonddog.github.io" target="_blank">Github</a></p>
 
     <script src="collapsible.js"></script>
     <script>
