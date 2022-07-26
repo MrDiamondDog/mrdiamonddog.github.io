@@ -13,7 +13,7 @@ body{
     background-color: rgba(69, 69, 69, 1);
     overflow-x: hidden;
 }
-p, a, h1, h2, h3, h4, label, input, select, button, div {
+p, a, h1, h2, h3, h4, label, input, select, button, div:not(.uploadcare--text) {    
     color: white;
     font-family: consolas;
 }
