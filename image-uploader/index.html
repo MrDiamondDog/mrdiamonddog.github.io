@@ -5,69 +5,25 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Image Uploader</title>
-    <style>
-        .uploadcare--widget__text{
-            display: none !important;
-        }
-        #upload-button{
-            display: block !important;
-        }
-        a{
-            font-size: 20px;
-            font-weight: bold;
-            color: #9faaff;
-        }
-    </style>
-    <script>
-        UPLOADCARE_PUBLIC_KEY = '76ef5257a3d5f416089e';
-    </script>
-    <script src="https://ucarecdn.com/libs/widget/3.x/uploadcare.full.min.js"></script>
-    <style>
-        body{
-            background-color: rgb(69, 69, 69);
-        }
-        .text{
-            color: white;
-            font-family: 'Roboto', sans-serif;
-            margin-top: 20px;
-        }
-        .uploadcare--footer__additions{
-            color:rgb(69, 69, 69);
-        }
-    </style>
+    <!-- Basic Uppy styles -->
+    <link href="https://releases.transloadit.com/uppy/v2.13.0/uppy.min.css" rel="stylesheet">
+    <script src="index.js" type="module"></script>
 </head>
 <body>
-    <h1 class="text">Image Uploader</h1>
-    <input type="hidden" role="uploadcare-uploader" name="my_file_input" data-multiple="true" data-tabs="file url"/>
+    <div class="Uppy">
+    <form action="https://mrdiamond-image-uploader.herokuapp.com/upload" method="post">
+        <h5>Uppy was not loaded — slow connection, unsupported browser, weird JS error on a page — but the upload still works, because HTML is cool like that</h5>
+        <input type="file" name="files[]" multiple="">
+        <button type="submit">Fallback Form Upload</button>
+    </form>
+    </div>
 
-    <script>
-        var file = document.getElementsByName("my_file_input")[0].value;
-        var a = document.createElement("a");
+    <div class="UppyProgressBar"></div>
 
-        document.addEventListener("DOMContentLoaded", async function(){
-            await sleep(5);
-            var widgets = uploadcare.initialize();
-            var widget = uploadcare.MultipleWidget('[role=uploadcare-uploader][data-multiple]');
-            widget.openDialog();
-            widget.onUploadComplete(function(info){
-                console.log(info);
-                a.href = info.cdnUrl + ((info.name[0] == '1') ? "nth/0/" : "");
-                a.innerHTML = info.name;
-                widget.value(null);
-            });
-            document.getElementsByClassName("uploadcare--widget__button")[0].id = "upload-button";
-            a.target = "_blank";
-            document.body.appendChild(document.createElement("br"));
-            document.body.appendChild(a);
-
-            window.onbeforeunload = function(){
-                widget.value(null);
-            }
-        });
-
-        function sleep(ms){
-            return new Promise(resolve => setTimeout(resolve, ms));
-        }
-    </script>
+    <!-- Uploaded files list -->
+    <div class="uploaded-files">
+    <h5>Uploaded files:</h5>
+    <ol></ol>
+    </div>
 </body>
 </html>
