@@ -1,7 +1,7 @@
-const Uppy = require('@uppy/core')
-const FileInput = require('@uppy/file-input')
-const XHRUpload = require('@uppy/xhr-upload')
-const ProgressBar = require('@uppy/progress-bar')
+import Uppy from '../node_modules/@uppy/core/types/index'
+import FileInput from '../node_modules/@uppy/file-input/types/index'
+import XHRUpload from '../node_modules/@uppy/xhr-upload/types/index'
+import ProgressBar from '../node_modules/@uppy/progress-bar/types/index'
 
 document.querySelector('.Uppy').innerHTML = ''
 
