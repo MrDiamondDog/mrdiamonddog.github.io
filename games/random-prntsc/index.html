@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Prnt.sc</title>
+    <link rel="stylesheet" href="./matter/main.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+</head>
+<body>
+    <script>
+        findImage();
+        function findImage(){
+            $.get(generateURL(), null, function(text){
+                alert($(text).find('#screenshot-image').attr('src'));
+            });
+        }
+
+        function generateURL() {
+            return "https://prnt.sc/" + makeId();
+        }
+
+        function makeId() {
+            var result = '';
+            var characters  = 'abcdefghijklmnopqrstuvwxyz0123456789';
+            var charactersLength = characters.length;
+            for ( var i = 0; i < 6; i++ ) {
+                result += characters.charAt(Math.floor(Math.random() * charactersLength));
+            }
+            return result;
+        }
+    </script>
+</body>
+</html>
