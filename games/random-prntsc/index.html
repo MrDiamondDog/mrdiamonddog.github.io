@@ -12,9 +12,15 @@
     <script>
         findImage();
         function findImage(){
-            $.get(generateURL(), null, function(text){
-                alert($(text).find('#screenshot-image').attr('src'));
-            });
+            var request = new XMLHttpRequest();
+
+            request.addEventListener("load", function(evt){
+                console.log(evt);
+            }, false);
+
+            request.open('GET', generateURL, true),
+            request.setRequestHeader("Access-Control-Allow-Origin", "https://mrdiamonddog.github.io");
+            request.send();
         }
 
         function generateURL() {
