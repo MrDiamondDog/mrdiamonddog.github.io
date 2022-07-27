@@ -1,11 +1,8 @@
-import Uppy from '../node_modules/@uppy/core/types/index.js'
-import FileInput from '../node_modules/@uppy/file-input/types/index.js'
-import XHRUpload from '../node_modules/@uppy/xhr-upload/types/index.js'
-import ProgressBar from '../node_modules/@uppy/progress-bar/types/index.js'
+const { FileInput, ProgressBar, XHRUpload } = Uppy
 
 document.querySelector('.Uppy').innerHTML = ''
 
-const uppy = new Uppy({ debug: true, autoProceed: true })
+const uppy = new Uppy.Core({ debug: true, autoProceed: true })
 uppy.use(FileInput, {
   target: '.Uppy',
 })
@@ -14,7 +11,7 @@ uppy.use(ProgressBar, {
   hideAfterFinish: false,
 })
 uppy.use(XHRUpload, {
-  endpoint: 'https://xhr-server.herokuapp.com/upload',
+  endpoint: 'https://mrdiamond-uploader.herokuapp.com/upload',
   formData: true,
   fieldName: 'files[]',
 })
