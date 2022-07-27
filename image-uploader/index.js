@@ -1,7 +1,7 @@
-import Uppy from '../node_modules/@uppy/core/types/index'
-import FileInput from '../node_modules/@uppy/file-input/types/index'
-import XHRUpload from '../node_modules/@uppy/xhr-upload/types/index'
-import ProgressBar from '../node_modules/@uppy/progress-bar/types/index'
+import Uppy from '@uppy/core/'
+import FileInput from '@uppy/file-input'
+import XHRUpload from '@uppy/xhr-upload'
+import ProgressBar from '@uppy/progress-bar'
 
 document.querySelector('.Uppy').innerHTML = ''
 
